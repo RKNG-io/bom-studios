@@ -20,7 +20,7 @@ def project_row(
         content=ft.Row(
             controls=[
                 ft.Container(
-                    content=ft.Icon(ft.icons.FOLDER_OUTLINED, size=24, color=COLORS["blue"]),
+                    content=ft.Icon(ft.Icons.FOLDER_OUTLINED, size=24, color=COLORS["blue"]),
                     width=48,
                     height=48,
                     bgcolor=COLORS["warm_white"],
@@ -38,7 +38,7 @@ def project_row(
                 ft.Text(f"{video_count} videos", size=14, color=COLORS["steel"]),
                 status_badge(status),
                 ft.IconButton(
-                    icon=ft.icons.CHEVRON_RIGHT,
+                    icon=ft.Icons.CHEVRON_RIGHT,
                     icon_color=COLORS["steel"],
                     on_click=on_click,
                 ),
@@ -77,7 +77,7 @@ def projects_page(page: ft.Page) -> ft.Control:
                 actions=[
                     primary_button(
                         text="New Project",
-                        icon=ft.icons.ADD,
+                        icon=ft.Icons.ADD,
                         on_click=lambda e: None,  # TODO: Open create modal
                     ),
                 ],
@@ -90,7 +90,7 @@ def projects_page(page: ft.Page) -> ft.Control:
                     ft.Container(expand=True),
                     ft.TextField(
                         hint_text="Search projects...",
-                        prefix_icon=ft.icons.SEARCH,
+                        prefix_icon=ft.Icons.SEARCH,
                         width=300,
                         border_radius=6,
                     ),

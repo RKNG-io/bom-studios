@@ -12,7 +12,7 @@ def cost_badge(cost_cents: int) -> ft.Container:
         content=ft.Row(
             controls=[
                 ft.Icon(
-                    ft.icons.EURO_OUTLINED,
+                    ft.Icons.EURO_OUTLINED,
                     size=14,
                     color=COLORS["steel"],
                 ),

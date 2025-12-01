@@ -38,7 +38,7 @@ def recent_video_row(title: str, status: str, date: str) -> ft.Container:
         content=ft.Row(
             controls=[
                 ft.Container(
-                    content=ft.Icon(ft.icons.PLAY_CIRCLE_OUTLINE, size=20, color=COLORS["steel"]),
+                    content=ft.Icon(ft.Icons.PLAY_CIRCLE_OUTLINE, size=20, color=COLORS["steel"]),
                     width=40,
                     height=40,
                     bgcolor=COLORS["silver"],
@@ -72,7 +72,7 @@ def dashboard_page(page: ft.Page) -> ft.Control:
                 actions=[
                     primary_button(
                         text="Create Video",
-                        icon=ft.icons.ADD,
+                        icon=ft.Icons.ADD,
                         on_click=lambda e: page.go("/create"),
                     ),
                 ],
@@ -81,10 +81,10 @@ def dashboard_page(page: ft.Page) -> ft.Control:
             # Stats row
             ft.Row(
                 controls=[
-                    stat_card("Videos This Month", "12", ft.icons.VIDEO_LIBRARY_OUTLINED),
-                    stat_card("Pending Review", "3", ft.icons.PENDING_ACTIONS_OUTLINED),
-                    stat_card("Active Clients", "8", ft.icons.PEOPLE_OUTLINE),
-                    stat_card("API Spend", "€4.20", ft.icons.EURO_OUTLINED),
+                    stat_card("Videos This Month", "12", ft.Icons.VIDEO_LIBRARY_OUTLINED),
+                    stat_card("Pending Review", "3", ft.Icons.PENDING_ACTIONS_OUTLINED),
+                    stat_card("Active Clients", "8", ft.Icons.PEOPLE_OUTLINE),
+                    stat_card("API Spend", "€4.20", ft.Icons.EURO_OUTLINED),
                 ],
                 spacing=SPACING["md"],
                 wrap=True,
@@ -133,17 +133,17 @@ def dashboard_page(page: ft.Page) -> ft.Control:
                                     ),
                                     ft.Container(height=SPACING["sm"]),
                                     ft.ListTile(
-                                        leading=ft.Icon(ft.icons.ADD_CIRCLE_OUTLINE, color=COLORS["black"]),
+                                        leading=ft.Icon(ft.Icons.ADD_CIRCLE_OUTLINE, color=COLORS["black"]),
                                         title=ft.Text("Create new video"),
                                         on_click=lambda e: page.go("/create"),
                                     ),
                                     ft.ListTile(
-                                        leading=ft.Icon(ft.icons.FOLDER_OPEN_OUTLINED, color=COLORS["black"]),
+                                        leading=ft.Icon(ft.Icons.FOLDER_OPEN_OUTLINED, color=COLORS["black"]),
                                         title=ft.Text("View all projects"),
                                         on_click=lambda e: page.go("/projects"),
                                     ),
                                     ft.ListTile(
-                                        leading=ft.Icon(ft.icons.PENDING_ACTIONS_OUTLINED, color=COLORS["black"]),
+                                        leading=ft.Icon(ft.Icons.PENDING_ACTIONS_OUTLINED, color=COLORS["black"]),
                                         title=ft.Text("Review pending videos"),
                                         on_click=lambda e: page.go("/library"),
                                     ),

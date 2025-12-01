@@ -18,7 +18,7 @@ def video_card(
                 # Thumbnail
                 ft.Container(
                     content=ft.Icon(
-                        ft.icons.PLAY_CIRCLE_OUTLINE,
+                        ft.Icons.PLAY_CIRCLE_OUTLINE,
                         size=40,
                         color=COLORS["steel"],
                     ) if not thumbnail_url else ft.Image(

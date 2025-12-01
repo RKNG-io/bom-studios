@@ -70,7 +70,7 @@ def settings_page(page: ft.Page) -> ft.Control:
                     controls=[
                         ft.Row(
                             controls=[
-                                ft.Icon(ft.icons.CLOUD_OFF, color=COLORS["steel"]),
+                                ft.Icon(ft.Icons.CLOUD_OFF, color=COLORS["steel"]),
                                 ft.Text("Not connected", color=COLORS["steel"]),
                             ],
                             spacing=SPACING["xs"],
@@ -78,7 +78,7 @@ def settings_page(page: ft.Page) -> ft.Control:
                         ft.Container(height=SPACING["sm"]),
                         secondary_button(
                             text="Connect Google Drive",
-                            icon=ft.icons.LINK,
+                            icon=ft.Icons.LINK,
                         ),
                     ],
                 ),

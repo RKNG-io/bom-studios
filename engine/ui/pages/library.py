@@ -55,7 +55,7 @@ def library_page(page: ft.Page) -> ft.Control:
                     ft.Container(expand=True),
                     ft.TextField(
                         hint_text="Search videos...",
-                        prefix_icon=ft.icons.SEARCH,
+                        prefix_icon=ft.Icons.SEARCH,
                         width=300,
                         border_radius=6,
                     ),

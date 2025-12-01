@@ -264,10 +264,10 @@ Scale to 20+ clients. Deliver 160+ videos/month. Sleep at night.
 
 ## One Last Thing
 
-This was built with love (and a lot of Claude). The foundation is solid. The automation is real. Now go make some videos.
+This was built with love. The foundation is solid. The automation is real. Now go make some videos.
 
 **Happy Birthday, Jeroen. Go build your empire.** 🚀
 
 ---
 
-*Built by Liz with Claude Code — December 2024*
+*Built by Liz — December 2024*
