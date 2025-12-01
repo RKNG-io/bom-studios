@@ -4,9 +4,23 @@
 
 ## Overview
 
-Client submits intake form → system produces draft video → Jeroen reviews → client approves → delivered.
+Client submits intake form → API triggers pipeline → draft video generated → Jeroen reviews → client approves → delivered.
 
 **Human touchpoints:** Review and approval only. Everything else automated.
+
+---
+
+## Current Implementation Status
+
+| Component | Status | Location |
+|-----------|--------|----------|
+| Website + Intake Form | ✅ Live | https://bom-studios.vercel.app |
+| API + Pipeline | ✅ Built | DO App Platform (demo) |
+| Script Generation | ✅ Built | `api/services/llm.py` |
+| Image Generation | ✅ Built | `api/services/images.py` |
+| Voiceover | ✅ Built | `api/services/voice.py` |
+| Video Assembly | ✅ Built | `api/services/video.py` |
+| Review Queue | 🚧 Pending | Engine/Portal |
 
 ---
 
@@ -16,27 +30,28 @@ Client submits intake form → system produces draft video → Jeroen reviews �
 ┌─────────────────────────────────────────────────────────────────┐
 │  CLIENT                                                         │
 │  ┌──────────────┐                                               │
-│  │ Intake Form  │ (Tally)                                       │
+│  │ Website Form │ (bom-studios.vercel.app/starten)              │
 │  └──────┬───────┘                                               │
 └─────────┼───────────────────────────────────────────────────────┘
-          │ webhook
+          │ POST /api/webhooks/tally
           ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│  ORCHESTRATOR (n8n)                                             │
+│  API (FastAPI on DO App Platform)                               │
 │                                                                 │
 │  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐      │
 │  │ 1. Parse &   │───▶│ 2. Generate  │───▶│ 3. Generate  │      │
 │  │    Validate  │    │    Script    │    │ Image Prompts│      │
-│  └──────────────┘    └──────────────┘    └──────────────┘      │
+│  └──────────────┘    │   (Claude)   │    │   (Claude)   │      │
+│                      └──────────────┘    └──────────────┘      │
 │                                                 │               │
 │                      ┌──────────────────────────┴─────┐        │
 │                      ▼                                ▼        │
 │              ┌──────────────┐                ┌──────────────┐  │
 │              │ 4. Generate  │                │ 5. Generate  │  │
 │              │    Images    │                │   Voiceover  │  │
-│              │  (Replicate) │                │ (ElevenLabs) │  │
+│              │ (Replicate)  │                │ (ElevenLabs) │  │
 │              └──────┬───────┘                └──────┬───────┘  │
-│                     │                               │          │
+│                     │  (parallel)                  │          │
 │                     └───────────────┬───────────────┘          │
 │                                     ▼                          │
 │                            ┌──────────────┐                    │
@@ -68,331 +83,245 @@ Client submits intake form → system produces draft video → Jeroen reviews �
 
 ---
 
-## Step-by-Step Breakdown
+## Intake Form Fields
 
-### 1. Intake Form (Tally)
+The website form (`/starten`) collects:
 
-**Fields:**
+| Field | Key | Type | Required |
+|-------|-----|------|----------|
+| Business Name | `business_name` | text | Yes |
+| Email | `email` | email | Yes |
+| Website & Social Links | `links` | textarea | No |
+| What do you sell/offer? | `what_they_sell` | textarea | Yes |
+| Who is your customer? | `target_customer` | textarea | Yes |
+| What makes you different? | `what_makes_different` | textarea | Yes |
+| Language | `language` | select | Yes |
+| Video Style | `video_style` | radio | Yes |
+| Specific Topic | `topic` | textarea | No |
+| Reference Videos | `reference_videos` | textarea | No |
+| Anything Else | `notes` | textarea | No |
 
-| Field | Type | Purpose |
-|-------|------|---------|
-| Business name | text | Context |
-| What do you sell/offer? | textarea | Core message |
-| Who is your customer? | textarea | Audience targeting |
-| What makes you different? | textarea | Hook material |
-| Tone preference | select | Friendly / Professional / Bold |
-| Language | select | NL / EN / Both |
-| Any specific topic for this video? | textarea | Optional focus |
-| Reference links (optional) | url | Style reference |
+### Language Options
+- `nl` — Dutch
+- `en` — English
+- `nl+en` — Dutch + English
+- `other` — Custom (free text)
 
-**On submit:** Webhook fires to n8n.
+### Video Style Options
+- `presenter` — Presenter to Camera (trust, directness, services)
+- `product` — Product Showcase (fast cuts, e-commerce)
+- `animated` — Animated Explainer (apps, tools, SaaS)
+- `voiceover` — Voiceover + B-roll (professional, no on-camera)
+- `hybrid` — Mix formats
 
 ---
 
-### 2. Parse & Validate (n8n)
+## API Endpoints
 
-- Extract form fields
-- Look up client in database (match by email or create new)
-- Check: has this client exceeded their monthly video quota?
-- Check: is there already a video in progress for this client?
-- If blocked → notify, halt pipeline
-- If clear → proceed
-
----
-
-### 3. Generate Script (LLM)
-
-**Prompt template:**
-
+### Webhook (Form Submission)
 ```
-You are a short-form video scriptwriter for Dutch small businesses.
+POST /api/webhooks/tally
+```
 
-CLIENT CONTEXT:
-- Business: {{business_name}}
-- Offer: {{what_they_sell}}
-- Audience: {{target_customer}}
-- Differentiator: {{what_makes_different}}
-- Tone: {{tone_preference}}
-- Language: {{language}}
-- Topic focus: {{specific_topic}}
+Accepts Tally-compatible payload:
+```json
+{
+  "eventId": "web-1701234567890",
+  "eventType": "FORM_RESPONSE",
+  "createdAt": "2024-12-01T20:00:00.000Z",
+  "data": {
+    "fields": [
+      {"key": "business_name", "label": "Business Name", "value": "..."},
+      {"key": "email", "label": "Email", "value": "..."},
+      {"key": "video_style", "label": "Video Style", "value": "presenter"},
+      ...
+    ]
+  }
+}
+```
 
-TASK:
-Write a 30–45 second video script for Instagram Reels / TikTok.
+### Other Endpoints
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/clients` | List clients |
+| POST | `/api/clients` | Create client |
+| GET | `/api/projects` | List projects |
+| GET | `/api/videos` | List videos |
+| POST | `/api/videos/{id}/approve` | Approve video |
+| POST | `/api/auth/magic-link` | Send login link |
+| GET | `/api/auth/verify` | Exchange token for JWT |
 
-REQUIREMENTS:
-- Strong hook in first 2 seconds
-- Clear single message
-- Call to action at end
-- {{language}} language
-- {{tone_preference}} tone
-- 5–7 scenes maximum
+---
 
-OUTPUT FORMAT:
-Return JSON:
+## Pipeline Services
+
+### 1. Script Generation (`services/llm.py`)
+
+Uses Claude API to generate structured scripts:
+
+```python
+async def generate_script(
+    business_name: str,
+    what_they_sell: str,
+    target_customer: str,
+    what_makes_different: str,
+    tone: str = "friendly",
+    language: str = "EN",
+    topic: str = None,
+) -> dict
+```
+
+Output:
+```json
 {
   "hook": "Opening line (2-3 seconds)",
   "scenes": [
     {"text": "Scene 1 narration", "duration": 5},
-    {"text": "Scene 2 narration", "duration": 6},
-    ...
+    {"text": "Scene 2 narration", "duration": 6}
   ],
   "cta": "Closing call to action",
   "total_duration": 35
 }
 ```
 
-**Model:** Claude Sonnet (via API) or GPT-4o
-
-**Output:** Structured script JSON
-
----
-
-### 4. Generate Image Prompts (LLM)
-
-**Input:** Script JSON from step 3
-
-**Prompt template:**
-
-```
-You are a visual director for short-form video content.
-
-SCRIPT:
-{{script_json}}
-
-BRAND CONTEXT:
-- Industry: {{industry}}
-- Colours: {{brand_colours}}
-- Style: Clean, modern, European, slightly desaturated
-
-TASK:
-Generate an image prompt for each scene. Images will be generated by Flux.
-
-REQUIREMENTS:
-- Photorealistic or clean illustration style (match brand)
-- No text in images
-- Consistent visual style across all scenes
-- Safe for work
-- Appropriate for Dutch business audience
-
-OUTPUT FORMAT:
-Return JSON:
-{
-  "prompts": [
-    {"scene": 1, "prompt": "..."},
-    {"scene": 2, "prompt": "..."},
-    ...
-  ]
-}
-```
-
-**Output:** Array of image prompts
-
----
-
-### 5. Generate Images (Replicate — Parallel)
-
-**Model:** Flux Schnell (fast) or Flux Dev (quality)
-
-**For each prompt:**
-```python
-replicate.run(
-    "black-forest-labs/flux-schnell",
-    input={
-        "prompt": scene_prompt,
-        "aspect_ratio": "9:16",
-        "num_outputs": 1
-    }
-)
-```
-
-**Run in parallel** — all scenes simultaneously.
-
-**Output:** Array of image URLs
-
-**Cost logging:** ~$0.003 per image × 5–7 images = ~$0.02 per video
-
----
-
-### 6. Generate Voiceover (ElevenLabs)
-
-**Input:** Full script text (concatenated scenes)
-
-**API call:**
-```python
-# Combine script
-full_script = script["hook"] + " " + " ".join([s["text"] for s in script["scenes"]]) + " " + script["cta"]
-
-# Generate
-audio = elevenlabs.generate(
-    text=full_script,
-    voice="Dutch_Male_Calm",  # or per-client preset
-    model="eleven_multilingual_v2"
-)
-```
-
-**Output:** Audio file (MP3/WAV)
-
-**Cost logging:** ~$0.30 per 1000 characters. 30-sec script ≈ 400 chars ≈ $0.12
-
----
-
-### 7. Assemble Video (FFmpeg)
-
-**Inputs:**
-- Images (5–7)
-- Audio file
-- Music track (from library, optional)
-- Brand assets (logo watermark)
-
-**Assembly logic:**
+### 2. Image Prompt Generation (`services/llm.py`)
 
 ```python
-# Pseudocode
-def assemble_video(images, audio, script, music=None):
-    # Calculate timing per scene from script durations
-    # Or: detect audio segments and sync
-    
-    # For each scene:
-    #   - Add image as clip (with Ken Burns zoom/pan)
-    #   - Duration from script or audio timing
-    
-    # Add audio track
-    # Add music track (lowered volume)
-    # Add logo watermark (bottom corner)
-    # Add captions (optional, from script)
-    
-    # Export: 1080x1920 (9:16)
-    
-    return output_path
+async def generate_image_prompts(
+    script: dict,
+    industry: str,
+) -> list[dict]
 ```
 
-**Implementation options:**
-- FFmpeg directly (most control)
-- MoviePy (Python wrapper, easier)
-- Remotion (if moving to JS pipeline)
+### 3. Image Generation (`services/images.py`)
 
-**Output:** Draft video file (MP4)
+Uses Replicate (Flux) for image generation:
 
----
-
-### 8. Create Draft & Notify
-
-- Save video to storage
-- Create Video record in database (status: `draft`)
-- Create notification for Jeroen
-- Optionally: auto-generate caption draft
-
-**Notification (Slack/Email):**
+```python
+async def generate_images_parallel(
+    prompts: list[str],
+    aspect_ratio: str = "9:16",
+) -> list[str]
 ```
-New draft video ready for review
 
-Client: {{client_name}}
-Topic: {{specific_topic}}
-Duration: {{total_duration}}s
+Runs all prompts in parallel for speed.
 
-[Review in Engine →]
+### 4. Voiceover Generation (`services/voice.py`)
+
+Uses ElevenLabs:
+
+```python
+async def generate_voiceover(
+    text: str,
+    language: str = "EN",
+    voice_id: str = None,
+) -> bytes
+```
+
+### 5. Video Assembly (`services/video.py`)
+
+Uses FFmpeg:
+
+```python
+async def assemble_video_simple(
+    image_urls: list[str],
+    audio_url: str,
+    output_format: str = "vertical",
+) -> Path
 ```
 
 ---
 
-## Quality Gates
+## Cost Estimates
 
-| Gate | Check | Action on Fail |
-|------|-------|----------------|
-| Form spam | Rate limit per email (1/day) | Reject, notify |
-| Script generation | JSON parse success | Retry once, then flag for manual |
-| Image generation | All images returned | Retry failed, proceed with partial |
-| Audio generation | File > 5 seconds | Retry, then flag |
-| Assembly | Output file exists, > 10 seconds | Flag for manual |
+| Step | Cost per Video | Notes |
+|------|----------------|-------|
+| Script (Claude) | ~$0.01 | Sonnet model |
+| Image Prompts (Claude) | ~$0.01 | Sonnet model |
+| Images (Replicate) | ~$0.02 | 5-7 images × $0.003 |
+| Voiceover (ElevenLabs) | ~$0.12 | ~400 chars |
+| **Total** | **~$0.16-0.20** | Without avatar |
 
----
-
-## Cost Controls
-
-| Step | Cost | Control |
-|------|------|---------|
-| LLM (script) | ~$0.01 | Low, no gate needed |
-| LLM (prompts) | ~$0.01 | Low, no gate needed |
-| Replicate | ~$0.02 | Log per-project |
-| ElevenLabs | ~$0.15 | Log per-project, monthly cap per client |
-| HeyGen (if used) | ~$1–2 | Manual approval required before generation |
-
-**Total automated cost per video:** ~$0.20–0.30 (no avatar)
-
-At 8 videos/month × 20 clients = 160 videos = ~$40/month in API costs.
+At 160 videos/month (8 × 20 clients) = ~$32/month in API costs.
 
 ---
 
-## n8n Workflow Structure
+## Environment Variables
 
-```
-Workflow: "Auto Video Pipeline"
+```bash
+# Database
+DATABASE_URL=sqlite+aiosqlite:///./data/bom.db  # Demo
+# DATABASE_URL=postgresql+asyncpg://...          # Production
 
-Trigger: Webhook (Tally form)
-    │
-    ├─► Parse JSON
-    │
-    ├─► HTTP Request: Check client quota (your API)
-    │       └─► If exceeded → Send rejection email → Stop
-    │
-    ├─► HTTP Request: Generate script (Claude API)
-    │
-    ├─► HTTP Request: Generate image prompts (Claude API)
-    │
-    ├─► Split: For each prompt
-    │       └─► HTTP Request: Replicate (parallel)
-    │
-    ├─► Merge: Collect image URLs
-    │
-    ├─► HTTP Request: ElevenLabs
-    │
-    ├─► HTTP Request: Your API — assemble video (triggers server-side FFmpeg)
-    │
-    ├─► HTTP Request: Your API — create draft record
-    │
-    └─► Slack/Email: Notify Jeroen
+# Auth
+JWT_SECRET=your-secret-here  # openssl rand -hex 32
+
+# AI Services (optional for full pipeline)
+ANTHROPIC_API_KEY=sk-ant-...
+REPLICATE_API_TOKEN=r8_...
+ELEVENLABS_API_KEY=...
+
+# Debug
+DEBUG=true  # Logs magic links to console
 ```
 
 ---
 
-## What This Unlocks
+## Deployment
 
-| Before | After |
-|--------|-------|
-| Jeroen writes script | Script generated from intake |
-| Jeroen generates images manually | Images generated automatically |
-| Jeroen records/generates VO | VO generated automatically |
-| Jeroen assembles in editor | Video assembled automatically |
-| Jeroen uploads for review | Draft appears in review queue |
+### Current: DigitalOcean App Platform (Demo)
 
-**Jeroen's role becomes:** Review, refine, approve. Creative direction, not production labour.
+1. Connect GitHub repo
+2. Source directory: `/api`
+3. Add environment variables
+4. Deploy
 
----
+### Future: Coolify (Production)
 
-## Limitations / Honest Caveats
-
-1. **Quality variance** — LLM scripts won't always nail the hook. Plan for 20–30% needing manual rewrite.
-2. **Image coherence** — Flux doesn't guarantee consistent style across scenes. May need prompt engineering or manual swap.
-3. **Audio sync** — Auto-timing is approximate. Some videos will need manual adjustment.
-4. **No avatar in auto-flow** — HeyGen is too expensive and slow for full automation. Keep avatar videos manual.
+Self-hosted on VPS for lower cost at scale.
 
 ---
 
-## Suggested Implementation Order
+## Webhook Configuration
 
-| Step | What | Effort |
-|------|------|--------|
-| 1 | Tally form + n8n webhook | 1 day |
-| 2 | Script generation prompt + test | 1 day |
-| 3 | Image prompt generation + test | 1 day |
-| 4 | Replicate integration | 1 day |
-| 5 | ElevenLabs integration | 1 day |
-| 6 | FFmpeg assembly endpoint | 2–3 days |
-| 7 | Full pipeline in n8n | 1–2 days |
-| 8 | Review queue in Engine | 1 day |
-
-**Total: ~10–12 days** to automated draft pipeline.
+In Vercel (website), set:
+```
+NEXT_PUBLIC_INTAKE_WEBHOOK_URL=https://your-api.ondigitalocean.app/api/webhooks/tally
+```
 
 ---
 
-*End of pipeline spec.*
+## What's Automated vs Manual
+
+| Task | Before | After |
+|------|--------|-------|
+| Receive intake | Manual email | Auto-form |
+| Write script | Jeroen writes | AI generates |
+| Generate images | Manual creation | AI generates |
+| Record voiceover | Manual recording | AI generates |
+| Assemble video | Manual editing | Auto FFmpeg |
+| Create draft | Manual upload | Auto pipeline |
+| **Review & approve** | **Jeroen** | **Jeroen** |
+
+---
+
+## Limitations
+
+1. **Quality variance** — Scripts may need 20-30% manual rewrite
+2. **Image coherence** — Style consistency across scenes not guaranteed
+3. **Audio sync** — Auto-timing is approximate
+4. **No avatar** — HeyGen too expensive for automation, keep manual
+
+---
+
+## Next Steps
+
+1. [ ] Connect website form to deployed API
+2. [ ] Add API keys for AI services
+3. [ ] Build review queue in Engine
+4. [ ] Client approval flow in Portal
+5. [ ] Delivery notifications (email/Slack)
+
+---
+
+*Updated: December 2024*
