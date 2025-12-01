@@ -21,6 +21,9 @@ No more hours of manual work per video. Now it's minutes.
 | Pricing packages | ✅ Live |
 | How it works | ✅ Live |
 | Intake form at `/starten` | ✅ Live |
+| Client portal at `/login` | ✅ Live |
+| Dashboard with projects/videos | ✅ Live |
+| Magic link authentication | ✅ Live |
 | Language toggle | ✅ Live |
 | Mobile responsive | ✅ Live |
 
@@ -76,8 +79,8 @@ No more hours of manual work per video. Now it's minutes.
 
 | Task | Effort | Notes |
 |------|--------|-------|
-| Review queue UI | 2-3 days | Where you approve/reject drafts |
-| Client portal | 2-3 days | Where clients view & approve |
+| Client portal | ✅ Built | `/login` → `/dashboard` |
+| Review queue UI (Engine) | 2-3 days | Your internal review tool |
 | Google Drive delivery | 1 day | Auto-upload approved videos |
 | Email notifications | 1 day | "Your video is ready" emails |
 
