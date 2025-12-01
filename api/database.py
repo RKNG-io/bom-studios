@@ -1,5 +1,7 @@
+import os
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import DeclarativeBase
@@ -7,6 +9,14 @@ from sqlalchemy.orm import DeclarativeBase
 from config import get_settings
 
 settings = get_settings()
+
+# Ensure data directory exists for SQLite
+if "sqlite" in settings.database_url and ":memory:" not in settings.database_url:
+    db_path = settings.database_url.replace("sqlite+aiosqlite:///", "")
+    if db_path.startswith("./"):
+        db_path = db_path[2:]
+    db_dir = Path(db_path).parent
+    db_dir.mkdir(parents=True, exist_ok=True)
 
 engine = create_async_engine(
     settings.database_url,
