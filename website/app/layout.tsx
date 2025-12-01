@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter, Michroma } from 'next/font/google'
 import { LanguageProvider } from '@/lib/language-context'
+import { AuthProvider } from '@/lib/auth-context'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import './globals.css'
@@ -47,11 +48,13 @@ export default function RootLayout({
   return (
     <html lang="nl" className={`${inter.variable} ${michroma.variable}`}>
       <body className="font-body text-bom-black bg-bom-warm-white antialiased">
-        <LanguageProvider>
-          <Header />
-          {children}
-          <Footer />
-        </LanguageProvider>
+        <AuthProvider>
+          <LanguageProvider>
+            <Header />
+            {children}
+            <Footer />
+          </LanguageProvider>
+        </AuthProvider>
       </body>
     </html>
   )

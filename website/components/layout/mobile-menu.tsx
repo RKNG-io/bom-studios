@@ -2,8 +2,10 @@
 
 import * as React from 'react'
 import Link from 'next/link'
-import { X } from 'lucide-react'
+import { X, User } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { useAuth } from '@/lib/auth-context'
+import { useLanguage } from '@/lib/language-context'
 
 export interface MobileMenuProps {
   open: boolean
@@ -12,6 +14,8 @@ export interface MobileMenuProps {
 }
 
 export const MobileMenu = ({ open, onClose, items }: MobileMenuProps) => {
+  const { user } = useAuth()
+  const { language } = useLanguage()
   // Close menu on escape key
   React.useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -58,11 +62,33 @@ export const MobileMenu = ({ open, onClose, items }: MobileMenuProps) => {
           </Link>
         ))}
 
+        {/* Login / Dashboard */}
+        {user ? (
+          <Link
+            href="/dashboard"
+            onClick={onClose}
+            className="flex items-center gap-2 text-xl hover:text-bom-silver transition-colors"
+          >
+            <User size={20} />
+            Dashboard
+          </Link>
+        ) : (
+          <Link
+            href="/login"
+            onClick={onClose}
+            className="text-xl hover:text-bom-silver transition-colors"
+          >
+            {language === 'nl' ? 'Inloggen' : 'Login'}
+          </Link>
+        )}
+
         {/* CTA Button */}
         <div className="mt-8">
-          <Button variant="primary-inverted" size="lg">
-            Start
-          </Button>
+          <Link href="/starten" onClick={onClose}>
+            <Button variant="primary-inverted" size="lg">
+              Start
+            </Button>
+          </Link>
         </div>
       </nav>
     </div>

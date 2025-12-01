@@ -3,15 +3,17 @@
 import * as React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Menu, Globe } from 'lucide-react'
+import { Menu, Globe, User } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Container } from './container'
 import { MobileMenu } from './mobile-menu'
 import { useLanguage } from '@/lib/language-context'
+import { useAuth } from '@/lib/auth-context'
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false)
   const { language, setLanguage, t } = useLanguage()
+  const { user } = useAuth()
 
   const navItems = [
     { label: t.nav.examples, href: '/#examples' },
@@ -60,6 +62,23 @@ export function Header() {
               <Globe size={18} />
               <span className="text-sm font-medium uppercase">{language}</span>
             </button>
+
+            {user ? (
+              <Link
+                href="/dashboard"
+                className="flex items-center gap-2 text-bom-graphite hover:text-bom-black transition-colors"
+              >
+                <User size={18} />
+                <span className="text-sm">{language === 'nl' ? 'Dashboard' : 'Dashboard'}</span>
+              </Link>
+            ) : (
+              <Link
+                href="/login"
+                className="text-bom-graphite hover:text-bom-black transition-colors text-sm"
+              >
+                {language === 'nl' ? 'Inloggen' : 'Login'}
+              </Link>
+            )}
 
             <Link href="/starten">
               <Button>{t.nav.start}</Button>
