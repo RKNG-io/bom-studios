@@ -49,6 +49,29 @@ No more hours of manual work per video. Now it's minutes.
 
 ---
 
+### 🖥️ Engine (Internal Review Tool)
+**Location:** `/engine`
+
+| Feature | Status |
+|---------|--------|
+| Dashboard overview | ✅ Built |
+| Projects list | ✅ Built |
+| Video library | ✅ Built |
+| Create video form | ✅ Built |
+| Settings page | ✅ Built |
+| Dark theme UI | ✅ Built |
+
+**Tech:** Flet (Python desktop app), runs locally
+
+**To run:**
+```bash
+cd engine
+pip install flet
+python main.py
+```
+
+---
+
 ### 🎬 Video Specs Supported
 
 **Styles:**
@@ -80,7 +103,7 @@ No more hours of manual work per video. Now it's minutes.
 | Task | Effort | Notes |
 |------|--------|-------|
 | Client portal | ✅ Built | `/login` → `/dashboard` |
-| Review queue UI (Engine) | 2-3 days | Your internal review tool |
+| Engine (review queue) | ✅ Built | Flet desktop app in `/engine` |
 | Google Drive delivery | 1 day | Auto-upload approved videos |
 | Email notifications | 1 day | "Your video is ready" emails |
 
