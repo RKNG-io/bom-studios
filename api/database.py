@@ -10,16 +10,29 @@ from config import get_settings
 
 settings = get_settings()
 
-# Ensure data directory exists for SQLite
-if "sqlite" in settings.database_url and ":memory:" not in settings.database_url:
-    db_path = settings.database_url.replace("sqlite+aiosqlite:///", "")
+# Determine database URL - handle container environments
+database_url = settings.database_url
+
+if "sqlite" in database_url and ":memory:" not in database_url:
+    db_path = database_url.replace("sqlite+aiosqlite:///", "")
     if db_path.startswith("./"):
         db_path = db_path[2:]
     db_dir = Path(db_path).parent
-    db_dir.mkdir(parents=True, exist_ok=True)
+    try:
+        db_dir.mkdir(parents=True, exist_ok=True)
+        # Test if we can write to this directory
+        test_file = db_dir / ".write_test"
+        test_file.touch()
+        test_file.unlink()
+    except (OSError, PermissionError):
+        # Fall back to /tmp for container environments
+        tmp_path = Path("/tmp/bom_data")
+        tmp_path.mkdir(parents=True, exist_ok=True)
+        database_url = f"sqlite+aiosqlite:///{tmp_path}/bom.db"
+        print(f"Using temp database at {database_url}")
 
 engine = create_async_engine(
-    settings.database_url,
+    database_url,
     echo=settings.debug,
 )
 
