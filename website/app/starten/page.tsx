@@ -18,6 +18,7 @@ interface FormData {
   language: string
   language_other: string
   video_style: string
+  video_length: string
   topic: string
   reference_videos: string
   notes: string
@@ -33,6 +34,7 @@ const initialFormData: FormData = {
   language: '',
   language_other: '',
   video_style: '',
+  video_length: '',
   topic: '',
   reference_videos: '',
   notes: '',
@@ -64,7 +66,8 @@ export default function StartenPage() {
       case 3:
         return formData.language.trim() !== '' &&
           (formData.language !== 'other' || formData.language_other.trim() !== '') &&
-          formData.video_style.trim() !== ''
+          formData.video_style.trim() !== '' &&
+          formData.video_length.trim() !== ''
       case 4:
         return true
       default:
@@ -93,6 +96,7 @@ export default function StartenPage() {
               { key: 'what_makes_different', label: 'What makes you different', value: formData.what_makes_different },
               { key: 'language', label: 'Language', value: formData.language === 'other' ? formData.language_other : formData.language },
               { key: 'video_style', label: 'Video Style', value: formData.video_style },
+              { key: 'video_length', label: 'Video Length', value: formData.video_length },
               { key: 'topic', label: 'Topic', value: formData.topic },
               { key: 'reference_videos', label: 'Reference Videos', value: formData.reference_videos },
               { key: 'notes', label: 'Notes', value: formData.notes },
@@ -395,6 +399,43 @@ export default function StartenPage() {
                           <div className="text-sm text-bom-steel">
                             {siteLang === 'nl' ? style.descNl : style.descEn}
                           </div>
+                        </div>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <label className="block text-sm font-medium text-bom-black">
+                    {siteLang === 'nl' ? 'Hoe lang moet de video zijn?' : 'How long should the video be?'}
+                  </label>
+                  <div className="grid grid-cols-3 gap-3">
+                    {[
+                      { value: '6s', labelEn: '6s Bumper', labelNl: '6s Bumper', descEn: 'Quick teaser', descNl: 'Snelle teaser' },
+                      { value: '15s', labelEn: '15s Standard', labelNl: '15s Standaard', descEn: 'Most popular', descNl: 'Meest populair' },
+                      { value: '30s', labelEn: '30s Extended', labelNl: '30s Uitgebreid', descEn: 'Full story', descNl: 'Volledig verhaal' },
+                    ].map((length) => (
+                      <label
+                        key={length.value}
+                        className={`flex flex-col items-center p-3 rounded border cursor-pointer transition-colors text-center ${
+                          formData.video_length === length.value
+                            ? 'border-bom-black bg-bom-warm-white'
+                            : 'border-bom-silver hover:border-bom-steel'
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          name="video_length"
+                          value={length.value}
+                          checked={formData.video_length === length.value}
+                          onChange={(e) => updateField('video_length', e.target.value)}
+                          className="sr-only"
+                        />
+                        <div className="font-bold text-lg text-bom-black">
+                          {length.value}
+                        </div>
+                        <div className="text-xs text-bom-steel">
+                          {siteLang === 'nl' ? length.descNl : length.descEn}
                         </div>
                       </label>
                     ))}
