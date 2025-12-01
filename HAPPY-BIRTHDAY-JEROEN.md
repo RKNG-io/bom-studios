@@ -270,4 +270,4 @@ This was built with love. The foundation is solid. The automation is real. Now g
 
 ---
 
-*Built by Liz — December 2024*
+*Built by Liz — December 2025*
