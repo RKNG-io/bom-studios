@@ -49,26 +49,19 @@ No more hours of manual work per video. Now it's minutes.
 
 ---
 
-### 🖥️ Engine (Internal Review Tool)
+### 🖥️ Engine (Your Review Tool)
 **Location:** `/engine`
 
 | Feature | Status |
 |---------|--------|
-| Dashboard overview | ✅ Built |
+| Dashboard with stats | ✅ Built |
 | Projects list | ✅ Built |
-| Video library | ✅ Built |
+| Video library with filters | ✅ Built |
 | Create video form | ✅ Built |
 | Settings page | ✅ Built |
-| Dark theme UI | ✅ Built |
+| BOM Studios theme | ✅ Built |
 
-**Tech:** Flet (Python desktop app), runs locally
-
-**To run:**
-```bash
-cd engine
-pip install flet
-python main.py
-```
+**Tech:** Flet (Python desktop app), runs on your Mac
 
 ---
 
@@ -239,7 +232,36 @@ curl https://your-do-app.ondigitalocean.app/health
 https://your-do-app.ondigitalocean.app/docs
 ```
 
-### Local Development
+### Install the Engine (Your Desktop App)
+
+This is your personal review tool. Runs on your Mac.
+
+```bash
+# 1. Clone the repo (if you haven't already)
+git clone https://github.com/RKNG-io/bom-studios.git
+cd bom-studios/engine
+
+# 2. Set up Python environment
+python3 -m venv .venv
+source .venv/bin/activate
+
+# 3. Install dependencies
+pip install -e .
+
+# 4. Run the app
+python app.py
+```
+
+A window will open with your dashboard. That's it!
+
+**Shortcut for next time:**
+```bash
+cd bom-studios/engine
+source .venv/bin/activate
+python app.py
+```
+
+### Local Development (Website & API)
 ```bash
 # Website
 cd website && npm run dev
