@@ -1,0 +1,63 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply text-bom-slate font-body antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-heading;
+  }
+
+  *:focus-visible {
+    @apply outline-none ring-2 ring-bom-blue ring-offset-2 ring-offset-bom-warm-white;
+  }
+}
+
+@layer components {
+  .prose {
+    @apply max-w-prose mx-auto;
+  }
+
+  .prose p {
+    @apply mb-4 leading-relaxed;
+  }
+
+  .prose h2 {
+    @apply text-2xl font-heading mb-4 mt-8 text-bom-black;
+  }
+
+  .prose h3 {
+    @apply text-xl font-heading mb-3 mt-6 text-bom-black;
+  }
+
+  .prose ul,
+  .prose ol {
+    @apply mb-4 ml-6;
+  }
+
+  .prose li {
+    @apply mb-2;
+  }
+
+  .prose a {
+    @apply text-bom-blue hover:underline;
+  }
+}
+
+@layer utilities {
+  .fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+}
