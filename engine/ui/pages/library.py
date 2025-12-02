@@ -4,14 +4,14 @@ import flet as ft
 from ui.theme import COLORS, SPACING
 from ui.layout import page_header
 from ui.components.video_card import video_card
-from core.api import api
+from core.api import api_client
 
 
 def library_page(page: ft.Page) -> ft.Control:
     """Build the library page."""
 
     # Fetch videos from API
-    videos = api.get_videos()
+    videos = api_client.get_videos()
 
     # Build video cards
     video_cards = []

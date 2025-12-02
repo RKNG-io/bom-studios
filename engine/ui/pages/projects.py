@@ -6,7 +6,7 @@ from ui.layout import page_header
 from ui.components.card import card
 from ui.components.button import primary_button, secondary_button
 from ui.components.status_badge import status_badge
-from core.api import api
+from core.api import api_client
 
 
 def project_row(
@@ -56,7 +56,7 @@ def projects_page(page: ft.Page) -> ft.Control:
     """Build the projects page."""
 
     # Fetch projects from API
-    projects = api.get_projects()
+    projects = api_client.get_projects()
 
     # Build project rows
     project_controls = []

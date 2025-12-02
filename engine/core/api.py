@@ -164,6 +164,20 @@ class APIClient:
         except Exception:
             return None
 
+    # Generic async post for webhook triggers
+    async def post(self, path: str, data: dict) -> dict:
+        """Generic async POST request."""
+        async with httpx.AsyncClient(timeout=30.0) as client:
+            try:
+                r = await client.post(
+                    f"{self.base_url}/api{path}",
+                    json=data,
+                    headers=self._headers(),
+                )
+                return r.json() if r.status_code in (200, 201) else {"status": "error", "message": r.text}
+            except Exception as e:
+                return {"status": "error", "message": str(e)}
+
 
 # Global client instance
-api = APIClient()
+api_client = APIClient()

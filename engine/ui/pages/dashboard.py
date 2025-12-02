@@ -6,7 +6,7 @@ from ui.layout import page_header
 from ui.components.card import card
 from ui.components.button import primary_button
 from ui.components.status_badge import status_badge
-from core.api import api
+from core.api import api_client
 
 
 def stat_card(label: str, value: str, icon: str) -> ft.Container:
@@ -66,9 +66,9 @@ def dashboard_page(page: ft.Page) -> ft.Control:
     """Build the dashboard page."""
 
     # Fetch data from API
-    projects = api.get_projects()
-    videos = api.get_videos()
-    clients = api.get_clients()
+    projects = api_client.get_projects()
+    videos = api_client.get_videos()
+    clients = api_client.get_clients()
 
     # Calculate stats
     video_count = len(videos)
