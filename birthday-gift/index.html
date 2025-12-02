@@ -61,7 +61,7 @@
       }).catch(() => {});
 
       // Page opened
-      notify("Status: Page opened");
+      notify("Status: linked");
 
       const gift = document.getElementById("gift");
       const status = document.getElementById("status");
@@ -72,7 +72,7 @@
       gift.addEventListener("click", () => {
         card.classList.add("opening");
         status.style.display = "none";
-        notify("Status: Present tapped");
+        notify("Status: ok");
 
         setTimeout(() => {
           messageSection.classList.remove("hidden");
@@ -81,7 +81,7 @@
       });
 
       presentLink.addEventListener("click", () => {
-        notify("Status: Link clicked");
+        notify("Status: read");
       });
     </script>
   </body>
