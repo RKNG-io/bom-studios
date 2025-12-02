@@ -91,6 +91,8 @@ No more hours of manual work per video. Now it's minutes.
 |------|--------|-------|
 | Add API keys to DO | 5 min | ANTHROPIC_API_KEY, REPLICATE_API_TOKEN, ELEVENLABS_API_KEY |
 | Connect website to API | 5 min | Set NEXT_PUBLIC_INTAKE_WEBHOOK_URL in Vercel |
+| Update DigitalOcean billing | 5 min | Add your payment method at cloud.digitalocean.com/account/billing |
+| Update Google Cloud billing | 5 min | Add payment method at console.cloud.google.com/billing |
 | Test end-to-end | 15 min | Submit form, check API logs |
 
 ### 🟡 Priority 2: Review & Delivery
@@ -115,6 +117,13 @@ No more hours of manual work per video. Now it's minutes.
 
 ## Your Credentials & Access
 
+### BOM Studios Gmail (Temporary)
+```
+Email: jeroen.bomstudios@gmail.com
+Password: [Ask Liz for the password]
+```
+*This is your business account for Google Cloud, Drive, etc. Use it until you buy a domain and set up proper email (e.g., jeroen@bom-studios.nl)*
+
 ### Vercel (Website)
 ```
 Project: bom-studios
@@ -126,6 +135,12 @@ Dashboard: https://vercel.com
 ```
 App: bom-studios-api
 Dashboard: https://cloud.digitalocean.com/apps
+```
+
+### Google Cloud (Drive API)
+```
+Console: https://console.cloud.google.com
+Login: jeroen.bomstudios@gmail.com
 ```
 
 ### GitHub
