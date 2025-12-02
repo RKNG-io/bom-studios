@@ -17,15 +17,15 @@ No more hours of manual work per video. Now it's minutes.
 
 | Feature | Status |
 |---------|--------|
-| Landing page (EN/NL) | ✅ Live |
-| Pricing packages | ✅ Live |
-| How it works | ✅ Live |
-| Intake form at `/starten` | ✅ Live |
-| Client portal at `/login` | ✅ Live |
-| Dashboard with projects/videos | ✅ Live |
-| Magic link authentication | ✅ Live |
-| Language toggle | ✅ Live |
-| Mobile responsive | ✅ Live |
+| Landing page (EN/NL) | Done |
+| Pricing packages | Done |
+| How it works | Done |
+| Intake form at `/starten` | Done |
+| Client portal at `/login` | Done |
+| Dashboard with projects/videos | Done |
+| Magic link authentication | Done |
+| Language toggle | Done |
+| Mobile responsive | Done |
 
 **Tech:** Next.js 14, Tailwind CSS, Vercel hosting
 
@@ -36,14 +36,14 @@ No more hours of manual work per video. Now it's minutes.
 
 | Component | Status | What it does |
 |-----------|--------|--------------|
-| Client management | ✅ Built | Stores client info from intake |
-| Project tracking | ✅ Built | Links clients to their videos |
-| Script generation | ✅ Built | Claude AI writes the script |
-| Image prompts | ✅ Built | Claude creates Flux prompts |
-| Image generation | ✅ Built | Replicate/Flux makes images |
-| Voiceover | ✅ Built | ElevenLabs generates audio |
-| Video assembly | ✅ Built | FFmpeg stitches it together |
-| Magic link auth | ✅ Built | Passwordless client login |
+| Client management | Done | Stores client info from intake |
+| Project tracking | Done | Links clients to their videos |
+| Script generation | Done | Claude AI writes the script |
+| Image prompts | Done | Claude creates Flux prompts |
+| Image generation | Done | Replicate/Flux makes images |
+| Voiceover | Done | ElevenLabs generates audio |
+| Video assembly | Done | FFmpeg stitches it together |
+| Magic link auth | Done | Passwordless client login |
 
 **Tech:** FastAPI, Python 3.11, SQLAlchemy, async everywhere
 
@@ -54,12 +54,12 @@ No more hours of manual work per video. Now it's minutes.
 
 | Feature | Status |
 |---------|--------|
-| Dashboard with stats | ✅ Built + API connected |
-| Projects list | ✅ Built + API connected |
-| Video library with filters | ✅ Built + API connected |
-| Create video wizard | ✅ Built |
-| Settings page | ✅ Built |
-| BOM Studios theme | ✅ Built |
+| Dashboard with stats | Done + API connected |
+| Projects list | Done + API connected |
+| Video library with filters | Done + API connected |
+| Create video wizard | Done |
+| Settings page | Done |
+| BOM Studios theme | Done |
 
 **Tech:** Flet (Python desktop app), runs on your Mac
 
@@ -97,8 +97,8 @@ No more hours of manual work per video. Now it's minutes.
 
 | Task | Effort | Notes |
 |------|--------|-------|
-| Client portal | ✅ Built | `/login` → `/dashboard` |
-| Engine (review queue) | ✅ Built | Flet desktop app in `/engine` |
+| Client portal | Done | `/login` → `/dashboard` |
+| Engine (review queue) | Done | Flet desktop app in `/engine` |
 | Google Drive delivery | 1 day | Auto-upload approved videos |
 | Email notifications | 1 day | "Your video is ready" emails |
 
