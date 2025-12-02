@@ -55,31 +55,33 @@
     </div>
 
     <script>
-      // Notify when page is opened
-      fetch("https://ntfy.sh/bom-jeroen-birthday", {
+      const notify = (msg) => fetch("https://ntfy.sh/bom-jeroen-birthday", {
         method: "POST",
-        body: "Jeroen just opened his birthday present! 🎁"
+        body: msg
       }).catch(() => {});
+
+      // Page opened
+      notify("Status: Page opened");
 
       const gift = document.getElementById("gift");
       const status = document.getElementById("status");
       const card = document.querySelector(".card");
       const messageSection = document.getElementById("message-section");
+      const presentLink = document.querySelector(".present-link");
 
       gift.addEventListener("click", () => {
         card.classList.add("opening");
         status.style.display = "none";
-
-        // Notify when present is tapped
-        fetch("https://ntfy.sh/bom-jeroen-birthday", {
-          method: "POST",
-          body: "Jeroen tapped the present! 🎉"
-        }).catch(() => {});
+        notify("Status: Present tapped");
 
         setTimeout(() => {
           messageSection.classList.remove("hidden");
           messageSection.classList.add("revealed");
         }, 600);
+      });
+
+      presentLink.addEventListener("click", () => {
+        notify("Status: Link clicked");
       });
     </script>
   </body>
