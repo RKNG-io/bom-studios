@@ -15,12 +15,13 @@ Client submits intake form → API triggers pipeline → draft video generated �
 | Component | Status | Location |
 |-----------|--------|----------|
 | Website + Intake Form | ✅ Live | https://bom-studios.vercel.app |
-| API + Pipeline | ✅ Built | DO App Platform (demo) |
+| Client Portal | ✅ Live | https://bom-studios.vercel.app/login |
+| Engine (Review Tool) | ✅ Built | `/engine` (desktop app) |
+| API + Pipeline | ✅ Live | DO App Platform |
 | Script Generation | ✅ Built | `api/services/llm.py` |
 | Image Generation | ✅ Built | `api/services/images.py` |
 | Voiceover | ✅ Built | `api/services/voice.py` |
 | Video Assembly | ✅ Built | `api/services/video.py` |
-| Review Queue | 🚧 Pending | Engine/Portal |
 
 ---
 
@@ -97,6 +98,7 @@ The website form (`/starten`) collects:
 | What makes you different? | `what_makes_different` | textarea | Yes |
 | Language | `language` | select | Yes |
 | Video Style | `video_style` | radio | Yes |
+| Video Length | `video_length` | radio | Yes |
 | Specific Topic | `topic` | textarea | No |
 | Reference Videos | `reference_videos` | textarea | No |
 | Anything Else | `notes` | textarea | No |
@@ -113,6 +115,11 @@ The website form (`/starten`) collects:
 - `animated` — Animated Explainer (apps, tools, SaaS)
 - `voiceover` — Voiceover + B-roll (professional, no on-camera)
 - `hybrid` — Mix formats
+
+### Video Length Options
+- `6s` — Bumper/teaser (2-3 scenes)
+- `15s` — Standard social (3-4 scenes)
+- `30s` — Extended story (5-7 scenes)
 
 ---
 
@@ -168,6 +175,8 @@ async def generate_script(
     tone: str = "friendly",
     language: str = "EN",
     topic: str = None,
+    video_style: str = "voiceover",
+    video_length: str = "15s",
 ) -> dict
 ```
 
@@ -316,12 +325,13 @@ NEXT_PUBLIC_INTAKE_WEBHOOK_URL=https://your-api.ondigitalocean.app/api/webhooks/
 
 ## Next Steps
 
-1. [ ] Connect website form to deployed API
-2. [ ] Add API keys for AI services
-3. [ ] Build review queue in Engine
-4. [ ] Client approval flow in Portal
-5. [ ] Delivery notifications (email/Slack)
+1. [x] Connect website form to deployed API
+2. [ ] Add API keys for AI services (DO dashboard)
+3. [x] Build review queue in Engine
+4. [x] Client approval flow in Portal
+5. [ ] Google Drive delivery
+6. [ ] Email notifications (Resend)
 
 ---
 
-*Updated: December 2024*
+*Updated: December 2025*
