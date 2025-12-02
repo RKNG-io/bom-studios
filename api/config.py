@@ -50,7 +50,11 @@ class Settings(BaseSettings):
     stripe_secret_key: Optional[str] = None
     stripe_webhook_secret: Optional[str] = None
     resend_api_key: Optional[str] = None
+    resend_from_email: str = "BOM Studios <onboarding@resend.dev>"  # Use verified domain when available
     n8n_webhook_url: Optional[str] = None
+
+    # Portal URL for magic links
+    portal_url: str = "https://bom-studios.vercel.app"
 
     # CORS
     cors_origins: list[str] = [

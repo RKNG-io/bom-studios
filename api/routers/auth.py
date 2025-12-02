@@ -11,15 +11,19 @@ from config import get_settings
 from database import get_session
 from models.db import Client
 from services.auth import (
+    CurrentClient,
     create_access_token,
     create_magic_link_token,
+    get_current_client,
     verify_magic_link_token,
 )
+from services.email import send_magic_link_email
 
 router = APIRouter()
 settings = get_settings()
 
 Session = Annotated[AsyncSession, Depends(get_session)]
+AuthClient = Annotated[CurrentClient, Depends(get_current_client)]
 
 
 class MagicLinkRequest(BaseModel):
@@ -66,16 +70,15 @@ async def send_magic_link(
     # Generate magic link token
     token = create_magic_link_token(request.email)
 
-    # In production: send email via Resend
-    # For now, we'll include the token in dev mode for testing
+    # In dev mode, return the token directly for testing
     if settings.debug:
         return MagicLinkResponse(
             message="Magic link generated (dev mode - token included)",
             token=token,
         )
 
-    # TODO: Send email via Resend
-    # await send_magic_link_email(request.email, token)
+    # Send email via Resend
+    send_magic_link_email(request.email, token)
 
     return MagicLinkResponse(
         message="If an account exists with this email, a magic link has been sent.",
@@ -123,14 +126,12 @@ async def verify_magic_link(
 
 
 @router.get("/me")
-async def get_current_client(
+async def get_me(
     session: Session,
-    # In a real app, this would come from the middleware
-    # For now, accept client_id as a query param for testing
-    client_id: str = Query(..., description="Client ID from token"),
+    auth: AuthClient,
 ):
     """Get the current authenticated client's info."""
-    stmt = select(Client).where(Client.id == client_id)
+    stmt = select(Client).where(Client.id == auth.client_id)
     result = await session.execute(stmt)
     client = result.scalar_one_or_none()
 
