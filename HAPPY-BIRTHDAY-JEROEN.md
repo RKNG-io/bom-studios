@@ -65,6 +65,8 @@ No more hours of manual work per video. Now it's minutes.
 
 **API Connected:** The Engine now fetches real data from the API!
 
+**Preview:** [See screenshots of the Engine](engine/ENGINE-PREVIEW.md)
+
 ---
 
 ### 🎬 Video Specs Supported
