@@ -4,22 +4,44 @@ import flet as ft
 from ui.theme import COLORS, SPACING
 from ui.layout import page_header
 from ui.components.video_card import video_card
+from core.api import api
 
 
 def library_page(page: ft.Page) -> ft.Control:
     """Build the library page."""
 
-    # Sample videos for display
-    videos = [
-        {"title": "Coffee Shop Intro", "status": "approved"},
-        {"title": "Product Feature #1", "status": "delivered"},
-        {"title": "Behind the Scenes", "status": "review"},
-        {"title": "Customer Testimonial", "status": "generating"},
-        {"title": "Weekly Tips #12", "status": "draft"},
-        {"title": "Holiday Special", "status": "approved"},
-        {"title": "New Menu Items", "status": "delivered"},
-        {"title": "Team Introduction", "status": "scripting"},
-    ]
+    # Fetch videos from API
+    videos = api.get_videos()
+
+    # Build video cards
+    video_cards = []
+    for video in videos:
+        video_cards.append(
+            video_card(
+                title=video.get("title", "Untitled"),
+                status=video.get("status", "draft"),
+                on_click=lambda e, v=video: None,  # TODO: Open video detail
+            )
+        )
+
+    # Fallback if no videos
+    if not video_cards:
+        video_cards = [
+            ft.Container(
+                content=ft.Column(
+                    controls=[
+                        ft.Icon(ft.Icons.VIDEO_LIBRARY_OUTLINED, size=48, color=COLORS["steel"]),
+                        ft.Text("No videos yet", color=COLORS["steel"]),
+                        ft.Text("Create your first video to get started", size=12, color=COLORS["steel"]),
+                    ],
+                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                    spacing=SPACING["sm"],
+                ),
+                padding=SPACING["xl"],
+                alignment=ft.alignment.center,
+                expand=True,
+            )
+        ]
 
     return ft.Column(
         controls=[
@@ -37,18 +59,9 @@ def library_page(page: ft.Page) -> ft.Control:
                         options=[
                             ft.dropdown.Option("all", "All"),
                             ft.dropdown.Option("draft", "Draft"),
+                            ft.dropdown.Option("review", "Review"),
                             ft.dropdown.Option("approved", "Approved"),
                             ft.dropdown.Option("delivered", "Delivered"),
-                        ],
-                        value="all",
-                    ),
-                    ft.Dropdown(
-                        label="Client",
-                        width=200,
-                        options=[
-                            ft.dropdown.Option("all", "All Clients"),
-                            ft.dropdown.Option("coffee", "Amsterdam Coffee"),
-                            ft.dropdown.Option("tech", "Tech Gadgets NL"),
                         ],
                         value="all",
                     ),
@@ -67,14 +80,7 @@ def library_page(page: ft.Page) -> ft.Control:
 
             # Video grid
             ft.Row(
-                controls=[
-                    video_card(
-                        title=video["title"],
-                        status=video["status"],
-                        on_click=lambda e: None,  # TODO: Open video detail
-                    )
-                    for video in videos
-                ],
+                controls=video_cards,
                 wrap=True,
                 spacing=SPACING["md"],
                 run_spacing=SPACING["md"],

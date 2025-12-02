@@ -6,6 +6,7 @@ from ui.layout import page_header
 from ui.components.card import card
 from ui.components.button import primary_button, secondary_button
 from ui.components.status_badge import status_badge
+from core.api import api
 
 
 def project_row(
@@ -53,6 +54,40 @@ def project_row(
 
 def projects_page(page: ft.Page) -> ft.Control:
     """Build the projects page."""
+
+    # Fetch projects from API
+    projects = api.get_projects()
+
+    # Build project rows
+    project_controls = []
+    for i, project in enumerate(projects):
+        if i > 0:
+            project_controls.append(ft.Divider(height=1, color=COLORS["silver"]))
+        project_controls.append(
+            project_row(
+                name=project.get("name", "Untitled Project"),
+                client=project.get("client_name", "Unknown Client"),
+                status=project.get("status", "draft"),
+                video_count=project.get("video_count", 0),
+            )
+        )
+
+    # Fallback if no projects
+    if not project_controls:
+        project_controls = [
+            ft.Container(
+                content=ft.Column(
+                    controls=[
+                        ft.Icon(ft.Icons.FOLDER_OFF_OUTLINED, size=48, color=COLORS["steel"]),
+                        ft.Text("No projects yet", color=COLORS["steel"]),
+                    ],
+                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                    spacing=SPACING["sm"],
+                ),
+                padding=SPACING["xl"],
+                alignment=ft.alignment.center,
+            )
+        ]
 
     # Filter state
     status_filter = ft.Dropdown(
@@ -102,44 +137,7 @@ def projects_page(page: ft.Page) -> ft.Control:
 
             # Projects list
             card(
-                content=ft.Column(
-                    controls=[
-                        project_row(
-                            name="January Campaign",
-                            client="Amsterdam Coffee Roasters",
-                            status="in_progress",
-                            video_count=4,
-                        ),
-                        ft.Divider(height=1, color=COLORS["silver"]),
-                        project_row(
-                            name="Product Launch",
-                            client="Tech Gadgets NL",
-                            status="review",
-                            video_count=8,
-                        ),
-                        ft.Divider(height=1, color=COLORS["silver"]),
-                        project_row(
-                            name="Brand Refresh",
-                            client="Fitness First Amsterdam",
-                            status="approved",
-                            video_count=6,
-                        ),
-                        ft.Divider(height=1, color=COLORS["silver"]),
-                        project_row(
-                            name="Holiday Campaign",
-                            client="Local Bakery",
-                            status="delivered",
-                            video_count=12,
-                        ),
-                        ft.Divider(height=1, color=COLORS["silver"]),
-                        project_row(
-                            name="New Client Onboarding",
-                            client="Design Studio",
-                            status="draft",
-                            video_count=0,
-                        ),
-                    ],
-                ),
+                content=ft.Column(controls=project_controls),
                 padding=0,
             ),
         ],
