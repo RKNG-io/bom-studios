@@ -1,13 +1,51 @@
 """Authentication service for magic link and JWT token handling."""
 
 from datetime import datetime, timedelta
-from typing import Optional
+from typing import Annotated, Optional
 
+from fastapi import Depends, HTTPException, status
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jose import JWTError, jwt
+from pydantic import BaseModel
 
 from config import get_settings
 
 settings = get_settings()
+security = HTTPBearer()
+
+
+class CurrentClient(BaseModel):
+    """Authenticated client info extracted from JWT."""
+
+    client_id: str
+    email: str
+
+
+async def get_current_client(
+    credentials: Annotated[HTTPAuthorizationCredentials, Depends(security)],
+) -> CurrentClient:
+    """
+    FastAPI dependency to extract and verify client from Bearer token.
+
+    Usage:
+        @router.get("/protected")
+        async def protected_route(client: Annotated[CurrentClient, Depends(get_current_client)]):
+            print(client.client_id)
+    """
+    token = credentials.credentials
+    payload = verify_access_token(token)
+
+    if not payload:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid or expired token",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    return CurrentClient(
+        client_id=payload["client_id"],
+        email=payload["email"],
+    )
 
 
 def create_magic_link_token(email: str) -> str:

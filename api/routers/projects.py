@@ -13,25 +13,25 @@ from models.schemas import (
     ProjectUpdate,
     ProjectWithVideos,
 )
+from services.auth import CurrentClient, get_current_client
 
 router = APIRouter()
 
 Session = Annotated[AsyncSession, Depends(get_session)]
+AuthClient = Annotated[CurrentClient, Depends(get_current_client)]
 
 
 @router.get("", response_model=list[ProjectResponse])
 async def list_projects(
     session: Session,
-    client_id: Optional[str] = Query(None, description="Filter by client ID"),
+    client: AuthClient,
     status: Optional[str] = Query(None, description="Filter by status"),
     skip: int = Query(0, ge=0),
     limit: int = Query(50, ge=1, le=100),
 ):
-    """List projects with optional filters."""
-    stmt = select(Project)
+    """List projects for the authenticated client."""
+    stmt = select(Project).where(Project.client_id == client.client_id)
 
-    if client_id:
-        stmt = stmt.where(Project.client_id == client_id)
     if status:
         stmt = stmt.where(Project.status == status)
 
@@ -43,14 +43,13 @@ async def list_projects(
 @router.post("", response_model=ProjectResponse, status_code=201)
 async def create_project(
     session: Session,
+    client: AuthClient,
     project_in: ProjectCreate,
 ):
-    """Create a new project."""
-    # Verify client exists
-    stmt = select(Client).where(Client.id == project_in.client_id)
-    result = await session.execute(stmt)
-    if not result.scalar_one_or_none():
-        raise HTTPException(status_code=400, detail="Client not found")
+    """Create a new project for the authenticated client."""
+    # Ensure client can only create projects for themselves
+    if project_in.client_id != client.client_id:
+        raise HTTPException(status_code=403, detail="Cannot create project for another client")
 
     project = Project(**project_in.model_dump())
     session.add(project)
@@ -62,12 +61,13 @@ async def create_project(
 @router.get("/{project_id}", response_model=ProjectWithVideos)
 async def get_project(
     session: Session,
+    client: AuthClient,
     project_id: str,
 ):
     """Get a project by ID with its videos."""
     stmt = (
         select(Project)
-        .where(Project.id == project_id)
+        .where(Project.id == project_id, Project.client_id == client.client_id)
         .options(selectinload(Project.videos))
     )
     result = await session.execute(stmt)
@@ -82,11 +82,14 @@ async def get_project(
 @router.patch("/{project_id}", response_model=ProjectResponse)
 async def update_project(
     session: Session,
+    client: AuthClient,
     project_id: str,
     project_in: ProjectUpdate,
 ):
     """Update a project."""
-    stmt = select(Project).where(Project.id == project_id)
+    stmt = select(Project).where(
+        Project.id == project_id, Project.client_id == client.client_id
+    )
     result = await session.execute(stmt)
     project = result.scalar_one_or_none()
 
@@ -105,10 +108,13 @@ async def update_project(
 @router.delete("/{project_id}", status_code=204)
 async def delete_project(
     session: Session,
+    client: AuthClient,
     project_id: str,
 ):
     """Delete a project and all its videos."""
-    stmt = select(Project).where(Project.id == project_id)
+    stmt = select(Project).where(
+        Project.id == project_id, Project.client_id == client.client_id
+    )
     result = await session.execute(stmt)
     project = result.scalar_one_or_none()
 

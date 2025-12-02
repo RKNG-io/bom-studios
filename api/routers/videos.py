@@ -16,24 +16,40 @@ from models.schemas import (
     VideoUpdate,
     VideoWithAssets,
 )
+from services.auth import CurrentClient, get_current_client
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
 Session = Annotated[AsyncSession, Depends(get_session)]
+AuthClient = Annotated[CurrentClient, Depends(get_current_client)]
+
+
+async def get_video_for_client(
+    session: AsyncSession, video_id: str, client_id: str
+) -> Video | None:
+    """Get a video, verifying it belongs to the client via its project."""
+    stmt = (
+        select(Video)
+        .join(Project)
+        .where(Video.id == video_id, Project.client_id == client_id)
+    )
+    result = await session.execute(stmt)
+    return result.scalar_one_or_none()
 
 
 @router.get("", response_model=list[VideoResponse])
 async def list_videos(
     session: Session,
+    client: AuthClient,
     project_id: Optional[str] = Query(None, description="Filter by project ID"),
     status: Optional[str] = Query(None, description="Filter by status"),
     skip: int = Query(0, ge=0),
     limit: int = Query(50, ge=1, le=100),
 ):
-    """List videos with optional filters."""
-    stmt = select(Video)
+    """List videos for the authenticated client."""
+    stmt = select(Video).join(Project).where(Project.client_id == client.client_id)
 
     if project_id:
         stmt = stmt.where(Video.project_id == project_id)
@@ -48,14 +64,17 @@ async def list_videos(
 @router.post("", response_model=VideoResponse, status_code=201)
 async def create_video(
     session: Session,
+    client: AuthClient,
     video_in: VideoCreate,
 ):
     """Create a new video record."""
-    # Verify project exists
-    stmt = select(Project).where(Project.id == video_in.project_id)
+    # Verify project exists and belongs to client
+    stmt = select(Project).where(
+        Project.id == video_in.project_id, Project.client_id == client.client_id
+    )
     result = await session.execute(stmt)
     if not result.scalar_one_or_none():
-        raise HTTPException(status_code=400, detail="Project not found")
+        raise HTTPException(status_code=404, detail="Project not found")
 
     video = Video(**video_in.model_dump())
     session.add(video)
@@ -67,11 +86,15 @@ async def create_video(
 @router.get("/{video_id}", response_model=VideoWithAssets)
 async def get_video(
     session: Session,
+    client: AuthClient,
     video_id: str,
 ):
     """Get a video by ID with its assets."""
     stmt = (
-        select(Video).where(Video.id == video_id).options(selectinload(Video.assets))
+        select(Video)
+        .join(Project)
+        .where(Video.id == video_id, Project.client_id == client.client_id)
+        .options(selectinload(Video.assets))
     )
     result = await session.execute(stmt)
     video = result.scalar_one_or_none()
@@ -85,13 +108,12 @@ async def get_video(
 @router.patch("/{video_id}", response_model=VideoResponse)
 async def update_video(
     session: Session,
+    client: AuthClient,
     video_id: str,
     video_in: VideoUpdate,
 ):
     """Update a video."""
-    stmt = select(Video).where(Video.id == video_id)
-    result = await session.execute(stmt)
-    video = result.scalar_one_or_none()
+    video = await get_video_for_client(session, video_id, client.client_id)
 
     if not video:
         raise HTTPException(status_code=404, detail="Video not found")
@@ -108,13 +130,12 @@ async def update_video(
 @router.post("/{video_id}/approve", response_model=VideoResponse)
 async def approve_video(
     session: Session,
+    client: AuthClient,
     video_id: str,
     approval: VideoApproval,
 ):
     """Client approval/rejection of a video."""
-    stmt = select(Video).where(Video.id == video_id)
-    result = await session.execute(stmt)
-    video = result.scalar_one_or_none()
+    video = await get_video_for_client(session, video_id, client.client_id)
 
     if not video:
         raise HTTPException(status_code=404, detail="Video not found")
@@ -142,13 +163,12 @@ async def approve_video(
 @router.post("/{video_id}/reject", response_model=VideoResponse)
 async def reject_video(
     session: Session,
+    client: AuthClient,
     video_id: str,
     approval: VideoApproval,
 ):
     """Client rejection of a video with note."""
-    stmt = select(Video).where(Video.id == video_id)
-    result = await session.execute(stmt)
-    video = result.scalar_one_or_none()
+    video = await get_video_for_client(session, video_id, client.client_id)
 
     if not video:
         raise HTTPException(status_code=404, detail="Video not found")
@@ -171,12 +191,11 @@ async def reject_video(
 @router.post("/{video_id}/submit", response_model=VideoResponse)
 async def submit_video(
     session: Session,
+    client: AuthClient,
     video_id: str,
 ):
     """Submit a video for client review."""
-    stmt = select(Video).where(Video.id == video_id)
-    result = await session.execute(stmt)
-    video = result.scalar_one_or_none()
+    video = await get_video_for_client(session, video_id, client.client_id)
 
     if not video:
         raise HTTPException(status_code=404, detail="Video not found")
@@ -196,12 +215,11 @@ async def submit_video(
 @router.delete("/{video_id}", status_code=204)
 async def delete_video(
     session: Session,
+    client: AuthClient,
     video_id: str,
 ):
     """Delete a video and its assets."""
-    stmt = select(Video).where(Video.id == video_id)
-    result = await session.execute(stmt)
-    video = result.scalar_one_or_none()
+    video = await get_video_for_client(session, video_id, client.client_id)
 
     if not video:
         raise HTTPException(status_code=404, detail="Video not found")
@@ -212,6 +230,7 @@ async def delete_video(
 @router.post("/{video_id}/deliver", response_model=VideoResponse)
 async def deliver_video(
     session: Session,
+    client: AuthClient,
     video_id: str,
     background_tasks: BackgroundTasks,
 ):
@@ -223,10 +242,11 @@ async def deliver_video(
     3. Update video status to 'delivered'
     4. Store the Drive link
     """
-    # Get video with project and client info
+    # Get video with project and client info, verifying ownership
     stmt = (
         select(Video)
-        .where(Video.id == video_id)
+        .join(Project)
+        .where(Video.id == video_id, Project.client_id == client.client_id)
         .options(selectinload(Video.project).selectinload(Project.client))
     )
     result = await session.execute(stmt)
