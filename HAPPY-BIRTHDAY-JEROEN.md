@@ -54,14 +54,16 @@ No more hours of manual work per video. Now it's minutes.
 
 | Feature | Status |
 |---------|--------|
-| Dashboard with stats | ✅ Built |
-| Projects list | ✅ Built |
-| Video library with filters | ✅ Built |
-| Create video form | ✅ Built |
+| Dashboard with stats | ✅ Built + API connected |
+| Projects list | ✅ Built + API connected |
+| Video library with filters | ✅ Built + API connected |
+| Create video wizard | ✅ Built |
 | Settings page | ✅ Built |
 | BOM Studios theme | ✅ Built |
 
 **Tech:** Flet (Python desktop app), runs on your Mac
+
+**API Connected:** The Engine now fetches real data from the API!
 
 ---
 
