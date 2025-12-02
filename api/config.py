@@ -42,10 +42,9 @@ class Settings(BaseSettings):
     heygen_api_key: Optional[str] = None
     anthropic_api_key: Optional[str] = None
 
-    # Google Drive (optional, for future phases)
-    google_client_id: Optional[str] = None
-    google_client_secret: Optional[str] = None
-    google_drive_folder_id: Optional[str] = None
+    # Google Drive
+    google_service_account_json: Optional[str] = None  # JSON string of service account credentials
+    google_drive_folder_id: Optional[str] = None  # Root folder ID for BOM Studios videos
 
     # External services (optional, for future phases)
     stripe_secret_key: Optional[str] = None

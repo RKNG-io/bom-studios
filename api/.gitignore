@@ -22,6 +22,10 @@ dist/
 # Environment
 .env
 
+# Google credentials
+google-credentials.json
+*-credentials.json
+
 # Database
 data/*.db
 data/*.db-journal

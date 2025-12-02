@@ -77,6 +77,8 @@ class Video(Base):
     cost_cents: Mapped[int] = mapped_column(default=0)
     approval_note: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     approved_at: Mapped[Optional[datetime]] = mapped_column(nullable=True)
+    delivery_url: Mapped[Optional[str]] = mapped_column(Text, nullable=True)  # Google Drive link
+    delivered_at: Mapped[Optional[datetime]] = mapped_column(nullable=True)
     created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
     updated_at: Mapped[datetime] = mapped_column(
         default=datetime.utcnow, onupdate=datetime.utcnow

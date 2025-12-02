@@ -99,7 +99,7 @@ No more hours of manual work per video. Now it's minutes.
 |------|--------|-------|
 | Client portal | Done | `/login` → `/dashboard` |
 | Engine (review queue) | Done | Flet desktop app in `/engine` |
-| Google Drive delivery | 1 day | Auto-upload approved videos |
+| Google Drive delivery | Ready | See `/docs/GOOGLE-DRIVE-SETUP.md` to configure |
 | Email notifications | 1 day | "Your video is ready" emails |
 
 ### 🟢 Priority 3: Nice to Have

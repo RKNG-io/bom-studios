@@ -94,6 +94,8 @@ class VideoResponse(BaseModel):
     cost_cents: int
     approval_note: Optional[str]
     approved_at: Optional[datetime]
+    delivery_url: Optional[str]
+    delivered_at: Optional[datetime]
     created_at: datetime
     updated_at: datetime
 
