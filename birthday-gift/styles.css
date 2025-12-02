@@ -1,0 +1,246 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Page background */
+body {
+  min-height: 100vh;
+  font-family: system-ui, sans-serif;
+  color: #e5e7eb;
+
+  background: radial-gradient(
+    circle at top center,
+    #1d4ed8 0%,
+    #0a0f25 55%,
+    #000000 100%
+  );
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wrapper {
+  width: 100%;
+  max-width: 480px;
+  padding: 1.5rem;
+}
+
+.card {
+  position: relative;
+  background: rgba(10, 15, 40, 0.85);
+  padding: 2rem;
+  border-radius: 24px;
+  text-align: center;
+
+  border: 1px solid rgba(59, 130, 246, 0.5);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(8px);
+
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 26px 50px rgba(37, 99, 235, 0.45);
+}
+
+h1 {
+  font-size: 1.7rem;
+  margin-bottom: 0.4rem;
+  color: #eff6ff;
+}
+
+.subtitle {
+  margin-bottom: 1.5rem;
+  color: #9ca3af;
+}
+
+/* Present video */
+#gift {
+  width: 260px;
+  max-width: 80%;
+  border-radius: 20px;
+  cursor: pointer;
+
+  border: 2px solid rgba(59, 130, 246, 0.7);
+
+  box-shadow:
+    0 0 28px rgba(37, 99, 235, 0.75),
+    0 0 48px rgba(59, 130, 246, 0.55);
+
+  transition: transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
+}
+
+#gift:hover {
+  transform: scale(1.05);
+  box-shadow:
+    0 0 36px rgba(96, 165, 250, 0.9),
+    0 0 58px rgba(147, 197, 253, 0.6);
+  border-color: rgba(147, 197, 253, 1);
+}
+
+#gift:active {
+  transform: scale(0.97);
+}
+
+.status {
+  margin-top: 1.3rem;
+  font-size: 0.95rem;
+  color: #bfdbfe;
+}
+
+/* Hidden reveal area */
+.hidden {
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: all 0.8s ease;
+}
+
+.revealed {
+  opacity: 1;
+  max-height: 900px;
+  margin-top: 2rem;
+}
+
+/* Message area */
+.message {
+  font-size: 1rem;
+  line-height: 1.55;
+  margin-top: 1.2rem;
+  color: #e0e7ff;
+  text-shadow: 0 0 8px rgba(59, 130, 246, 0.4);
+}
+
+/* Floating neon particles */
+.particle-layer {
+  position: absolute;
+  top: 52%;
+  left: 50%;
+  width: 260px;
+  height: 260px;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.particle-layer::before,
+.particle-layer::after {
+  content: "";
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: rgba(96, 165, 250, 0.9);
+  border-radius: 50%;
+  filter: blur(1px);
+  animation: floatUp 2.6s linear infinite;
+}
+
+.particle-layer::after {
+  width: 4px;
+  height: 4px;
+  left: 60%;
+  animation-duration: 3.2s;
+  animation-delay: 0.8s;
+}
+
+@keyframes floatUp {
+  0% {
+    transform: translate(0, 20px) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(0, -90px) scale(0.6);
+    opacity: 0;
+  }
+}
+
+/* Boost pad pulse */
+.pulse-ring {
+  position: absolute;
+  top: 52%;
+  left: 50%;
+  width: 260px;
+  height: 260px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: -1;
+  animation: pulse 2.8s ease-out infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 40px 30px rgba(59, 130, 246, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+  }
+}
+
+/* Ripple when tapped */
+.card.opening::after {
+  content: "";
+  position: absolute;
+  top: 52%;
+  left: 50%;
+  width: 280px;
+  height: 280px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  pointer-events: none;
+  box-shadow: 0 0 50px 30px rgba(147, 197, 253, 0.35);
+  animation: tapRipple 0.65s ease-out forwards;
+}
+
+@keyframes tapRipple {
+  0% {
+    opacity: 0.9;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.6);
+  }
+}
+
+/* Scale + glow when opening */
+.card.opening #gift {
+  transform: scale(1.12) rotate(-1deg);
+  box-shadow:
+    0 0 40px rgba(96, 165, 250, 0.95),
+    0 0 80px rgba(147, 197, 253, 0.7);
+  border-color: #60a5fa;
+}
+
+.card.opening .status {
+  color: #a5b4fc;
+}
+
+/* Present link */
+.present-link {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.8rem 1.5rem;
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  color: #fff;
+  text-decoration: none;
+  border-radius: 12px;
+  font-weight: 500;
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.present-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6);
+}

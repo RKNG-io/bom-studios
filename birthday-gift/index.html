@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta property="og:title" content="A Birthday Surprise">
+    <meta property="og:description" content="Tap the present to open it">
+    <meta property="og:image" content="https://birthday-gift-11sk3uzpl-lizs-projects-6eacd3ad.vercel.app/birthday.png">
+    <meta property="og:type" content="website">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birthday Surprise</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+
+  <body>
+    <div class="wrapper">
+      <div class="card">
+        <h1>Tap your birthday present</h1>
+        <p class="subtitle">I made something for you.</p>
+
+        <div class="particle-layer"></div>
+        <div class="pulse-ring"></div>
+
+        <video
+          id="gift"
+          src="present.mp4"
+          autoplay
+          loop
+          muted
+          playsinline
+        ></video>
+
+        <p id="status" class="status">Tap the present above</p>
+
+        <div id="message-section" class="hidden">
+          <div class="spotify">
+            <iframe
+              style="border-radius:12px"
+              src="https://open.spotify.com/embed/track/0Hw6SCrtU9pFCjgAONpnGZ?utm_source=generator"
+              width="100%"
+              height="152"
+              frameborder="0"
+              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+              loading="lazy">
+            </iframe>
+          </div>
+
+          <p class="message">
+            Happy birthday!<br><br>
+            Press play on the song above, then…
+          </p>
+
+          <a href="https://github.com/RKNG-io/bom-studios/blob/main/HAPPY-BIRTHDAY-JEROEN.md" class="present-link">Open your present</a>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Notify when page is opened
+      fetch("https://ntfy.sh/bom-jeroen-birthday", {
+        method: "POST",
+        body: "Jeroen just opened his birthday present! 🎁"
+      }).catch(() => {});
+
+      const gift = document.getElementById("gift");
+      const status = document.getElementById("status");
+      const card = document.querySelector(".card");
+      const messageSection = document.getElementById("message-section");
+
+      gift.addEventListener("click", () => {
+        card.classList.add("opening");
+        status.style.display = "none";
+
+        // Notify when present is tapped
+        fetch("https://ntfy.sh/bom-jeroen-birthday", {
+          method: "POST",
+          body: "Jeroen tapped the present! 🎉"
+        }).catch(() => {});
+
+        setTimeout(() => {
+          messageSection.classList.remove("hidden");
+          messageSection.classList.add("revealed");
+        }, 600);
+      });
+    </script>
+  </body>
+</html>
