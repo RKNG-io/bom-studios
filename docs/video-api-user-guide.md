@@ -1,419 +1,675 @@
-# Video Generation API User Guide
+# BOM Studios - Complete Setup Guide
 
 **For:** Jeroen
 **Last Updated:** December 2024
 
-This guide covers all third-party APIs and services needed for BOM Studios video generation, including setup instructions and alternative providers you may wish to test.
+A beginner-friendly guide to all the services you need to connect, what they do, and how to get from zero to generating test videos.
 
 ---
 
 ## Table of Contents
 
-1. [Overview](#overview)
-2. [Required APIs](#required-apis)
-   - [Claude API (Script Generation)](#1-claude-api-anthropic---script-generation)
-   - [Replicate (Image Generation)](#2-replicate---image-generation)
-   - [ElevenLabs (Voice Generation)](#3-elevenlabs---voice-generation)
-   - [FFmpeg (Video Assembly)](#4-ffmpeg---video-assembly)
-3. [Optional APIs](#optional-apis)
-   - [HeyGen (Avatar Videos)](#5-heygen---avatar-videos)
-   - [Google Drive (Delivery)](#6-google-drive---file-delivery)
-4. [Alternative Providers](#alternative-providers)
-5. [Cost Comparison](#cost-comparison)
-6. [Quick Setup Checklist](#quick-setup-checklist)
+1. [The Big Picture](#the-big-picture)
+2. [Understanding AI Models](#understanding-ai-models)
+3. [Video Generation APIs](#video-generation-apis)
+4. [Infrastructure Services](#infrastructure-services)
+5. [What You Need Right Now](#what-you-need-right-now)
+6. [Step-by-Step Setup](#step-by-step-setup)
+7. [Testing Your First Video](#testing-your-first-video)
+8. [Cost Calculator](#cost-calculator)
 
 ---
 
-## Overview
+## The Big Picture
 
-The BOM Studios video pipeline uses several APIs to automate video creation:
+### What BOM Studios Does
 
 ```
-Script (Claude) → Images (Replicate) → Voice (ElevenLabs) → Assembly (FFmpeg)
+Client fills form → AI writes script → AI makes images → AI generates voice → Video assembled
 ```
 
-**Estimated time per video:** 8-14 minutes
-**Estimated cost per video:** €0.15-0.20
+### All The Services (Overview)
+
+| Category | Service | What It Does | Need Now? |
+|----------|---------|--------------|-----------|
+| **AI Brain** | Claude/Gemini/GPT | Writes scripts | Yes |
+| **Images** | Replicate/fal.ai | Creates visuals | Yes |
+| **Voice** | ElevenLabs | Speaks the script | Yes |
+| **Video** | FFmpeg | Combines everything | Yes (free) |
+| **Forms** | Tally | Client intake | Later |
+| **Automation** | n8n | Connects everything | Later |
+| **Hosting** | DigitalOcean | Runs the API | Later |
+| **Website** | Vercel | Hosts the website | Later |
+| **Storage** | Google Drive | Delivers videos | Later |
+| **Email** | Resend | Sends notifications | Later |
+| **Payments** | Stripe | Takes payments | Much later |
 
 ---
 
-## Required APIs
+## Understanding AI Models
 
-### 1. Claude API (Anthropic) - Script Generation
+### The Restaurant Analogy
 
-**What it does:** Generates video scripts and image prompts using AI
+Think of AI models like restaurants:
 
-**Current model:** `claude-sonnet-4-20250514`
+| Tier | Restaurant | AI Examples | Best For |
+|------|------------|-------------|----------|
+| **Premium** | Michelin star | Claude Opus, GPT-4, Gemini Ultra | Complex creative work |
+| **Standard** | Nice bistro | Claude Sonnet, GPT-4o, Gemini Pro | Daily production work |
+| **Budget** | Fast food | Claude Haiku, GPT-4o-mini, Gemini Flash | Simple quick tasks |
 
-#### Setup
+**The key insight:** More expensive doesn't always mean better for YOUR task. A Michelin chef is overkill for making a sandwich.
 
+---
+
+### Claude (Anthropic) - What We Use
+
+Anthropic makes Claude. Here are the model tiers:
+
+| Model | Speed | Quality | Price | Best For |
+|-------|-------|---------|-------|----------|
+| **Opus** | Slow | Exceptional | €15/1M tokens | Complex reasoning, research |
+| **Sonnet** | Medium | Very good | €3/1M tokens | Creative writing, scripts |
+| **Haiku** | Fast | Good | €0.25/1M tokens | Simple tasks, summaries |
+
+**We use:** Sonnet (best balance for video scripts)
+
+**Tokens explained:** ~750 words = 1,000 tokens. A video script uses ~500-1000 tokens.
+
+#### When to use each:
+
+```
+Haiku  → "Summarize this text" or "Fix this grammar"
+Sonnet → "Write a creative video script" ← OUR USE CASE
+Opus   → "Analyze this complex business problem"
+```
+
+---
+
+### OpenAI (GPT) - Alternative
+
+| Model | Speed | Quality | Price | Comparable To |
+|-------|-------|---------|-------|---------------|
+| **GPT-4** | Slow | Excellent | €30/1M tokens | Claude Opus |
+| **GPT-4o** | Medium | Very good | €5/1M tokens | Claude Sonnet |
+| **GPT-4o-mini** | Fast | Good | €0.15/1M tokens | Claude Haiku |
+
+**Verdict:** Similar to Claude. GPT is more widely known, Claude often writes more naturally.
+
+---
+
+### Google (Gemini) - Budget Alternative
+
+| Model | Speed | Quality | Price | Comparable To |
+|-------|-------|---------|-------|---------------|
+| **Gemini 1.5 Pro** | Medium | Very good | €1.25/1M tokens | Claude Sonnet (cheaper!) |
+| **Gemini 1.5 Flash** | Very fast | Good | €0.075/1M tokens | Claude Haiku (much cheaper!) |
+| **Gemini 2.0 Flash** | Very fast | Better | €0.10/1M tokens | Between Haiku & Sonnet |
+
+**Verdict:** Best value for money. Good Dutch support. Worth testing!
+
+---
+
+### Other Options
+
+| Provider | Model | Why Consider | Price |
+|----------|-------|--------------|-------|
+| **Mistral** | Large | EU-based (GDPR) | €2/1M tokens |
+| **Groq** | Llama 3.1 | Extremely fast | €0.60/1M tokens |
+| **DeepSeek** | V3 | Very cheap | €0.14/1M tokens |
+
+---
+
+### How to Choose a Model
+
+Ask yourself:
+
+1. **Is this task creative?** → Use Sonnet/GPT-4o/Gemini Pro
+2. **Is this task simple?** → Use Haiku/GPT-4o-mini/Flash
+3. **Is this task complex reasoning?** → Use Opus/GPT-4 (rare)
+4. **Am I on a tight budget?** → Use Gemini Flash
+5. **Do I need EU data residency?** → Use Mistral
+
+**For BOM Studios video scripts:** Start with Claude Sonnet, test Gemini 1.5 Pro as a cheaper alternative.
+
+---
+
+### Quick Model Comparison Table
+
+| Task | Best Choice | Budget Choice |
+|------|-------------|---------------|
+| Video scripts | Claude Sonnet | Gemini 1.5 Pro |
+| Image prompts | Claude Sonnet | Gemini Flash |
+| Summaries | Claude Haiku | Gemini Flash |
+| Translations | GPT-4o | Gemini Flash |
+| Complex analysis | Claude Opus | GPT-4 |
+
+---
+
+## Video Generation APIs
+
+These are the services that actually create the video content.
+
+### 1. Script Generation (LLM)
+
+**What it does:** Writes the video script with hook, scenes, and call-to-action
+
+| Provider | Model | Quality | Cost/Video | Notes |
+|----------|-------|---------|------------|-------|
+| **Anthropic** | Claude Sonnet | Excellent | €0.02 | Best creative writing |
+| **Google** | Gemini 1.5 Pro | Very good | €0.005 | 4x cheaper, good Dutch |
+| **OpenAI** | GPT-4o | Very good | €0.02 | Most popular |
+| **Groq** | Llama 3.1 70B | Good | €0.002 | 10x cheaper, fast |
+
+**Current:** Claude Sonnet
+**Test:** Gemini 1.5 Pro (same quality, 4x cheaper)
+
+#### Setup (Claude)
 1. Go to [console.anthropic.com](https://console.anthropic.com)
-2. Create an account and add billing
-3. Generate an API key under "API Keys"
-4. Add to your `.env` file:
-   ```
-   ANTHROPIC_API_KEY=sk-ant-api03-xxxxx
-   ```
+2. Add payment method
+3. Create API key
+4. Add to `.env`: `ANTHROPIC_API_KEY=sk-ant-...`
 
-#### Pricing
-
-| Usage | Cost |
-|-------|------|
-| Input tokens | $3.00 / 1M tokens |
-| Output tokens | $15.00 / 1M tokens |
-| **Per video (avg)** | **~€0.02** |
-
-#### How We Use It
-
-- **Script generation:** Creates structured scripts with hook, scenes, and CTA
-- **Image prompts:** Converts script scenes into visual descriptions for image generation
-- **Supports:** Dutch/English, multiple tones (friendly, professional, bold), various video lengths (6s, 15s, 30s)
-
-#### Alternatives to Test
-
-| Provider | Model | Pros | Cons | Pricing |
-|----------|-------|------|------|---------|
-| **OpenAI** | GPT-4o | Widely used, good Dutch | Slightly less creative | $5-15/1M tokens |
-| **Google** | Gemini 1.5 Pro | Cheap, large context | Weaker creative writing | $1.25-5/1M tokens |
-| **Mistral** | Mistral Large | EU-based, GDPR friendly | Smaller ecosystem | $2-6/1M tokens |
-| **Groq** | Llama 3.1 70B | Extremely fast, cheap | Open model limitations | ~$0.60/1M tokens |
-
-**Recommendation:** Stick with Claude for creative scripts. Test Gemini for cost reduction if budget is a concern.
+#### Setup (Gemini - Alternative)
+1. Go to [aistudio.google.com](https://aistudio.google.com)
+2. Get API key (free tier available!)
+3. Add to `.env`: `GOOGLE_API_KEY=...`
 
 ---
 
-### 2. Replicate - Image Generation
+### 2. Image Generation
 
-**What it does:** Generates AI images for each video scene
+**What it does:** Creates the visuals for each scene in the video
 
-**Current model:** `black-forest-labs/flux-schnell` (fast, high quality)
+| Provider | Model | Quality | Speed | Cost/Image | Notes |
+|----------|-------|---------|-------|------------|-------|
+| **Replicate** | Flux Schnell | Good | Fast | €0.003 | Current choice |
+| **Replicate** | Flux Dev | Better | Medium | €0.025 | Higher quality |
+| **Replicate** | Flux Pro | Best | Slow | €0.05 | Premium quality |
+| **fal.ai** | Flux Schnell | Good | Very fast | €0.002 | Cheaper! |
+| **Stability AI** | SD3 | Good | Medium | €0.04 | Direct API |
+| **Leonardo AI** | Various | Good | Medium | €0.02 | Nice UI |
+| **Ideogram** | 2.0 | Best text | Medium | €0.03 | Best for text in images |
 
-#### Setup
+**Current:** Replicate (Flux Schnell) - ~€0.02 per video (6 images)
+**Test:** fal.ai (same model, cheaper)
 
+#### Setup (Replicate)
 1. Go to [replicate.com](https://replicate.com)
-2. Sign up with GitHub
-3. Go to Account → API Tokens
-4. Add to your `.env` file:
-   ```
-   REPLICATE_API_TOKEN=r8_xxxxx
-   ```
+2. Sign in with GitHub
+3. Get API token
+4. Add to `.env`: `REPLICATE_API_TOKEN=r8_...`
 
-#### Pricing
-
-| Usage | Cost |
-|-------|------|
-| Flux Schnell | ~$0.003 per image |
-| **Per video (5-7 images)** | **~€0.02** |
-
-#### How We Use It
-
-- **Aspect ratio:** 9:16 (vertical for Reels/TikTok/Shorts)
-- **Parallel generation:** All images generate simultaneously
-- **Timeout:** 60 seconds max per image
-
-#### Alternatives to Test
-
-| Provider | Model | Pros | Cons | Pricing |
-|----------|-------|------|------|---------|
-| **Replicate** | Flux Pro | Higher quality | Slower, more expensive | $0.05/image |
-| **Replicate** | Flux Dev | Middle ground | Moderate speed | $0.025/image |
-| **Stability AI** | Stable Diffusion 3 | Direct API, consistent | Less stylized | $0.04-0.08/image |
-| **Midjourney** | MJ v6.1 | Best aesthetics | No API (workarounds exist) | $8-30/month |
-| **Leonardo AI** | Various | Good UI, API available | Smaller community | $0.02-0.04/image |
-| **Ideogram** | Ideogram 2.0 | Best text rendering | Limited styles | $0.02-0.04/image |
-| **fal.ai** | Flux variants | Very fast, cheap | Less known | $0.002-0.01/image |
-
-**Recommendation:**
-- **Budget:** Try fal.ai (same Flux models, cheaper)
-- **Quality:** Test Flux Pro for important clients
-- **Text in images:** Use Ideogram when text accuracy matters
+#### Setup (fal.ai - Alternative)
+1. Go to [fal.ai](https://fal.ai)
+2. Create account
+3. Get API key
+4. Add to `.env`: `FAL_KEY=...`
 
 ---
 
-### 3. ElevenLabs - Voice Generation
+### 3. Voice Generation
 
-**What it does:** Converts script text to realistic voiceover audio
+**What it does:** Converts the script text to spoken audio
 
-**Current model:** `eleven_multilingual_v2`
+| Provider | Quality | Dutch | Cost/Video | Notes |
+|----------|---------|-------|------------|-------|
+| **ElevenLabs** | Excellent | Great | €0.12 | Best quality |
+| **Play.ht** | Very good | Good | €0.08 | Good alternative |
+| **Amazon Polly** | Okay | Okay | €0.01 | Very cheap |
+| **Google TTS** | Okay | Good | €0.01 | Very cheap |
+| **Azure TTS** | Good | Good | €0.02 | Microsoft |
 
-#### Setup
+**Current:** ElevenLabs (best Dutch voices)
+**Budget test:** Amazon Polly or Google TTS (10x cheaper, lower quality)
 
+#### Setup (ElevenLabs)
 1. Go to [elevenlabs.io](https://elevenlabs.io)
-2. Create account and choose a plan
-3. Go to Profile → API Key
-4. Add to your `.env` file:
-   ```
-   ELEVENLABS_API_KEY=xxxxx
-   ```
+2. Create account
+3. Pick a plan (Starter €5/month is fine for testing)
+4. Get API key from Profile
+5. Add to `.env`: `ELEVENLABS_API_KEY=...`
 
-#### Pricing
-
-| Plan | Characters/month | Cost |
-|------|------------------|------|
-| Free | 10,000 | €0 |
-| Starter | 30,000 | €5/month |
-| Creator | 100,000 | €22/month |
-| Pro | 500,000 | €99/month |
-| **Per video (~400 chars)** | | **~€0.12** |
-
-#### Pre-configured Voices
-
-| Voice | ID | Language |
-|-------|-----|----------|
-| Adam (Male) | `pNInz6obpgDQGcFmaJgB` | Dutch/English |
-| Rachel (Female) | `21m00Tcm4TlvDq8ikWAM` | Dutch/English |
-
-#### How We Use It
-
-- **Output format:** MP3
-- **Voice settings:** Stability 0.5, Similarity 0.75
-- **Languages:** Dutch and English supported
-
-#### Alternatives to Test
-
-| Provider | Pros | Cons | Pricing |
-|----------|------|------|---------|
-| **Play.ht** | Great Dutch, voice cloning | Newer platform | $31-99/month |
-| **Murf.ai** | Studio UI, good accents | API less flexible | $23-79/month |
-| **WellSaid Labs** | Enterprise quality | US-focused | $49-99/month |
-| **Amazon Polly** | Cheap, reliable | Less natural | $4/1M chars |
-| **Google Cloud TTS** | Very cheap, many languages | Robotic feel | $4-16/1M chars |
-| **Azure TTS** | Good Dutch, neural voices | Complex setup | $15/1M chars |
-| **Resemble AI** | Voice cloning | Complex | $0.06/second |
-
-**Recommendation:**
-- **Budget:** Amazon Polly or Google Cloud TTS (10-20x cheaper)
-- **Quality (Dutch):** Stick with ElevenLabs or try Play.ht
-- **Volume:** Azure TTS offers good Dutch at scale
+**Pre-configured voices:**
+- Dutch Male: Adam (`pNInz6obpgDQGcFmaJgB`)
+- Dutch Female: Rachel (`21m00Tcm4TlvDq8ikWAM`)
 
 ---
 
-### 4. FFmpeg - Video Assembly
+### 4. Video Assembly (FFmpeg)
 
-**What it does:** Combines images, voiceover, and music into final video
+**What it does:** Combines images + voice + music into final video
 
-**Cost:** Free (local processing)
+**Cost:** FREE (runs on your computer)
 
 #### Setup
-
-Install FFmpeg on your system:
 
 ```bash
-# macOS
+# Mac
 brew install ffmpeg
 
-# Ubuntu/Debian
+# Ubuntu/Linux
 sudo apt install ffmpeg
 
-# Windows (via Chocolatey)
+# Windows
 choco install ffmpeg
 
-# Verify installation
+# Verify
 ffmpeg -version
 ```
 
-#### Features We Use
+**Features we use:**
+- Ken Burns effect (subtle zoom on images)
+- Audio mixing (voice + background music)
+- Multiple formats (9:16 vertical, 1:1 square, 16:9 horizontal)
 
-- **Ken Burns effect:** Subtle zoom/pan on images
-- **Audio mixing:** Voiceover + background music
-- **Output formats:** Vertical (9:16), Square (1:1), Horizontal (16:9)
-- **Codecs:** H.264 video, AAC audio
-
-#### Alternatives
-
-| Tool | Pros | Cons | Cost |
-|------|------|------|------|
-| **MoviePy** | Python library, simpler | Slower, less features | Free |
-| **Shotstack** | Cloud API, no FFmpeg needed | Monthly cost | $25-100/month |
-| **Creatomate** | Template-based, API | Monthly cost | $49-199/month |
-| **Bannerbear** | Video API | Limited features | $49-199/month |
-| **JSON2Video** | Simple JSON input | Basic output | $20-80/month |
-
-**Recommendation:** Stick with FFmpeg (free, full control). Consider Shotstack/Creatomate only if you need cloud rendering for scale.
+**No alternatives needed** - FFmpeg is the industry standard and free.
 
 ---
 
-## Optional APIs
+### 5. Avatar Videos (Optional - Future)
 
-### 5. HeyGen - Avatar Videos
+**What it does:** Creates AI avatars that speak your script
 
-**Status:** Planned for Phase 2b
+| Provider | Quality | Dutch | Cost/Min | Notes |
+|----------|---------|-------|----------|-------|
+| **HeyGen** | Excellent | Great | €2-5 | Best Dutch avatars |
+| **D-ID** | Very good | Good | €1-2 | Good API |
+| **Synthesia** | Best | Good | €5-10 | Premium, expensive |
 
-**What it does:** Creates realistic AI avatars speaking your script
-
-#### Setup
-
-1. Go to [heygen.com](https://heygen.com)
-2. Create business account
-3. API access requires paid plan
-4. Add to your `.env` file:
-   ```
-   HEYGEN_API_KEY=xxxxx
-   ```
-
-#### Pricing
-
-| Plan | Credits | Cost |
-|------|---------|------|
-| Creator | 15 credits | $29/month |
-| Business | 60 credits | $89/month |
-| **Per 1-min video** | | **~€2-5** |
-
-#### Alternatives to Test
-
-| Provider | Pros | Cons | Pricing |
-|----------|------|------|---------|
-| **D-ID** | Good API, natural motion | Expensive at scale | $0.02-0.05/second |
-| **Synthesia** | Best quality | Very expensive | $29-90/video |
-| **Tavus** | Personalization focus | Limited avatars | Custom |
-| **Runway** | Gen-2 video AI | Different use case | $12-76/month |
-| **Pika Labs** | Creative video | Less realistic | Free/$8/month |
-
-**Recommendation:** HeyGen has the best Dutch support. Test D-ID as backup. Synthesia for premium clients.
+**Status:** Planned for Phase 2b (not needed yet)
 
 ---
 
-### 6. Google Drive - File Delivery
+## Infrastructure Services
+
+These services run and connect everything together.
+
+### 1. n8n - Automation Platform
+
+**What it does:** Connects all your services together with visual workflows
+
+Think of it like: "When X happens, do Y, then Z"
+
+**Example workflow:**
+```
+Client submits form → Create project → Generate script → Generate images → Send notification
+```
+
+**Why n8n?**
+- Self-hosted (your data stays private)
+- Visual workflow builder (no code needed)
+- Cheaper than Zapier at scale
+- Can connect to anything
+
+**Alternatives:**
+| Service | Hosting | Cost | Notes |
+|---------|---------|------|-------|
+| **n8n** | Self-hosted | Free | Our choice |
+| **n8n Cloud** | Hosted | €20+/month | Easier setup |
+| **Zapier** | Hosted | €20-100/month | Most popular |
+| **Make** | Hosted | €9-29/month | Good value |
+
+**Setup:** Later (Phase 2.5) - you don't need this for testing
+
+---
+
+### 2. DigitalOcean (DO) - Cloud Hosting
+
+**What it does:** Runs your API server in the cloud so it's always available
+
+**Think of it like:** Renting a computer that's always on, connected to the internet
+
+**What we host there:**
+- FastAPI backend (the brain)
+- PostgreSQL database (the memory)
+
+**Alternatives:**
+| Service | Type | Cost | Notes |
+|---------|------|------|-------|
+| **DigitalOcean App Platform** | Managed | €5-12/month | Easy, our choice |
+| **DigitalOcean Droplet** | VPS | €4-6/month | More control |
+| **Railway** | Managed | €5-20/month | Very easy |
+| **Render** | Managed | €0-7/month | Free tier! |
+| **Hetzner** | VPS | €3-5/month | Cheapest EU |
+| **Coolify** | Self-hosted | VPS cost only | Future plan |
+
+**For testing:** You can run everything locally! No hosting needed yet.
+
+---
+
+### 3. Vercel - Website Hosting
+
+**What it does:** Hosts the website and client portal
+
+**What's hosted there:**
+- Landing page (bom-studios.nl)
+- Client login portal
+- Video approval pages
+
+**Cost:** Free for small projects, €20/month for more
+
+**Alternatives:**
+| Service | Cost | Notes |
+|---------|------|-------|
+| **Vercel** | Free-€20 | Best for Next.js |
+| **Netlify** | Free-€19 | Similar to Vercel |
+| **Cloudflare Pages** | Free | Very fast |
+
+**Current:** Already set up on Vercel
+
+---
+
+### 4. Tally - Form Builder
+
+**What it does:** Creates the client intake form
+
+**How it works:**
+1. Client fills out form on your website
+2. Tally sends data to your API (webhook)
+3. API starts video generation
+
+**Cost:** Free for basic, €29/month for premium
+
+**Alternatives:**
+| Service | Cost | Notes |
+|---------|------|-------|
+| **Tally** | Free-€29 | Beautiful, simple |
+| **Typeform** | €25-83 | More features |
+| **Google Forms** | Free | Basic but works |
+| **Jotform** | Free-€39 | Many templates |
+
+**Setup:** Create form at [tally.so](https://tally.so), point webhook to your API
+
+---
+
+### 5. Google Drive - File Storage
 
 **What it does:** Stores and shares final videos with clients
 
-#### Setup
+**How it works:**
+1. Video is generated
+2. Uploaded to client's folder in Drive
+3. Client gets link to view/download
 
-1. Go to [Google Cloud Console](https://console.cloud.google.com)
-2. Create new project
-3. Enable Google Drive API
-4. Create Service Account with Editor role
-5. Download JSON credentials
-6. Create a shared folder in Drive
-7. Share folder with service account email
-8. Add to your `.env` file:
-   ```
-   GOOGLE_SERVICE_ACCOUNT_JSON='{"type":"service_account",...}'
-   GOOGLE_DRIVE_FOLDER_ID=xxxxx
-   ```
+**Cost:** Free (15GB), or included with Workspace
 
-#### Pricing
-
-| Storage | Cost |
-|---------|------|
-| First 15GB | Free |
-| Google Workspace | €5.75-17.25/user/month |
-
-#### Alternatives
-
-| Service | Pros | Cons | Pricing |
-|---------|------|------|---------|
-| **Bunny CDN** | Fast, cheap, global | Video add-on needed | $0.01/GB stored |
-| **Backblaze B2** | Very cheap storage | No viewer interface | $0.005/GB stored |
-| **AWS S3** | Reliable, scalable | Complex, adds up | $0.023/GB stored |
-| **Cloudflare R2** | No egress fees | Newer | $0.015/GB stored |
-| **Vimeo** | Pro video hosting | Expensive | $12-65/month |
-| **Mux** | Developer-friendly | Pay per minute | $0.002/min watched |
-
-**Recommendation:** Keep Google Drive for simplicity. Consider Bunny CDN or Mux for scale/embedding.
+**Alternatives:**
+| Service | Cost | Notes |
+|---------|------|-------|
+| **Google Drive** | Free | Simple sharing |
+| **Dropbox** | €10+/month | Business features |
+| **Bunny CDN** | €0.01/GB | Fast streaming |
+| **Cloudflare R2** | €0.015/GB | No egress fees |
 
 ---
 
-## Alternative Providers
+### 6. Resend - Email Service
 
-### All-in-One Video APIs
+**What it does:** Sends emails (magic links, notifications)
 
-If you want to simplify the stack, these services combine multiple steps:
+**Examples:**
+- "Click here to log in" (magic link)
+- "Your video is ready for review"
+- "Video approved, delivering now"
 
-| Service | What it replaces | Pros | Cons | Pricing |
-|---------|-----------------|------|------|---------|
-| **Creatomate** | FFmpeg + rendering | Templates, API | Limited AI | $49-199/month |
-| **Shotstack** | FFmpeg + rendering | Cloud scale | No AI generation | $25-100/month |
-| **Runway** | Images + video | AI-native | Different style | $12-76/month |
-| **Lumen5** | Script → video | Automated | Template-based | $19-149/month |
-| **Pictory** | Script → video | Easy | Less control | $23-119/month |
+**Cost:** Free (3,000 emails/month), then €20/month
 
----
-
-## Cost Comparison
-
-### Current Stack (Per Video)
-
-| Service | Cost |
-|---------|------|
-| Claude (script + prompts) | €0.02 |
-| Replicate (images) | €0.02 |
-| ElevenLabs (voice) | €0.12 |
-| FFmpeg | Free |
-| **Total** | **~€0.16** |
-
-### Budget Alternative Stack
-
-| Service | Cost |
-|---------|------|
-| Gemini 1.5 Pro (script) | €0.005 |
-| fal.ai (images) | €0.01 |
-| Amazon Polly (voice) | €0.01 |
-| FFmpeg | Free |
-| **Total** | **~€0.025** |
-
-### Premium Stack
-
-| Service | Cost |
-|---------|------|
-| Claude Opus (script) | €0.08 |
-| Flux Pro (images) | €0.35 |
-| ElevenLabs (voice) | €0.12 |
-| HeyGen (avatar) | €3.00 |
-| **Total** | **~€3.55** |
+**Alternatives:**
+| Service | Free Tier | Paid | Notes |
+|---------|-----------|------|-------|
+| **Resend** | 3,000/month | €20 | Developer-friendly |
+| **SendGrid** | 100/day | €15 | Popular |
+| **Postmark** | 100/month | €10 | Transactional focus |
+| **Mailgun** | 5,000/month | €35 | Feature-rich |
 
 ---
 
-## Quick Setup Checklist
+### 7. Stripe - Payments (Future)
 
-### Minimum Required (MVP)
+**What it does:** Processes client payments
 
-- [ ] **Anthropic API Key** - [console.anthropic.com](https://console.anthropic.com)
-- [ ] **Replicate Token** - [replicate.com](https://replicate.com)
-- [ ] **ElevenLabs Key** - [elevenlabs.io](https://elevenlabs.io)
-- [ ] **FFmpeg installed** - `brew install ffmpeg`
+**When needed:** Phase 4 (not now)
 
-### Full Production
+**Cost:** 1.4% + €0.25 per transaction (EU cards)
 
-- [ ] All MVP requirements
-- [ ] **Google Drive** service account configured
-- [ ] **HeyGen API Key** (for avatar videos)
-- [ ] **Resend API Key** (for email notifications)
+---
 
-### Environment File Template
+## What You Need Right Now
+
+### To Generate Test Videos (Minimum)
+
+You only need **4 things** to start testing:
+
+| Service | Cost | Time to Setup |
+|---------|------|---------------|
+| Claude API key | ~€5 to start | 5 minutes |
+| Replicate token | ~€5 to start | 5 minutes |
+| ElevenLabs key | €5/month (Starter) | 5 minutes |
+| FFmpeg installed | Free | 2 minutes |
+
+**Total: ~€15 and 20 minutes**
+
+### To Run Full Automation (Later)
+
+| Service | When Needed |
+|---------|-------------|
+| DigitalOcean hosting | When going live |
+| Google Drive setup | When delivering to clients |
+| Tally form | When accepting client requests |
+| n8n workflows | When automating everything |
+| Resend email | When sending notifications |
+| Stripe | When charging clients |
+
+---
+
+## Step-by-Step Setup
+
+### Phase 1: Get API Keys (20 minutes)
+
+#### Step 1: Claude (Anthropic)
+1. Go to [console.anthropic.com](https://console.anthropic.com)
+2. Sign up with email
+3. Add €5 credit (Settings → Billing)
+4. Go to API Keys → Create Key
+5. Copy the key starting with `sk-ant-api03-...`
+
+#### Step 2: Replicate
+1. Go to [replicate.com](https://replicate.com)
+2. Click "Sign in with GitHub"
+3. Go to Account → API Tokens
+4. Copy the token starting with `r8_...`
+
+#### Step 3: ElevenLabs
+1. Go to [elevenlabs.io](https://elevenlabs.io)
+2. Sign up
+3. Pick "Starter" plan (€5/month)
+4. Click profile icon → Profile + API Key
+5. Copy the API key
+
+#### Step 4: FFmpeg
+```bash
+# Mac
+brew install ffmpeg
+
+# Linux
+sudo apt install ffmpeg
+
+# Windows
+choco install ffmpeg
+```
+
+### Phase 2: Configure Environment
+
+Create/edit the `.env` file in `/api/`:
 
 ```bash
-# Required for video generation
-ANTHROPIC_API_KEY=sk-ant-api03-xxxxx
-REPLICATE_API_TOKEN=r8_xxxxx
-ELEVENLABS_API_KEY=xxxxx
+# Minimum for testing
+ANTHROPIC_API_KEY=sk-ant-api03-your-key-here
+REPLICATE_API_TOKEN=r8_your-token-here
+ELEVENLABS_API_KEY=your-key-here
 
-# Optional - Avatar videos
-HEYGEN_API_KEY=xxxxx
+# Auth (generate random strings)
+JWT_SECRET=generate-a-random-string-here
+MAGIC_LINK_SECRET=generate-another-random-string
 
-# Optional - File delivery
-GOOGLE_SERVICE_ACCOUNT_JSON='{"type":"service_account",...}'
-GOOGLE_DRIVE_FOLDER_ID=xxxxx
+# Database (local testing)
+DATABASE_URL=sqlite+aiosqlite:///./data/bom.db
+```
 
-# Optional - Notifications
-RESEND_API_KEY=re_xxxxx
+### Phase 3: Run Locally
+
+```bash
+# Terminal 1: Start the API
+cd api
+pip install -r requirements.txt
+uvicorn main:app --reload --port 8000
+
+# Terminal 2: Start the Engine (optional)
+cd engine
+pip install flet
+flet run app.py
+```
+
+### Phase 4: Test Video Generation
+
+Use the API directly:
+
+```bash
+# Test script generation
+curl -X POST http://localhost:8000/api/videos/test-pipeline \
+  -H "Content-Type: application/json" \
+  -d '{
+    "business_name": "Test Bakkerij",
+    "what_they_sell": "Artisan bread and pastries",
+    "target_customer": "Health-conscious food lovers",
+    "what_makes_different": "Traditional recipes, local ingredients",
+    "language": "nl",
+    "video_style": "voiceover",
+    "video_length": "15s",
+    "topic": "New sourdough collection"
+  }'
 ```
 
 ---
 
-## Testing New Providers
+## Testing Your First Video
 
-When testing alternatives:
+### Quick Test Checklist
 
-1. **Start small** - Test with 1-2 videos first
-2. **Compare quality** - Save outputs side by side
-3. **Measure latency** - Some cheap options are slow
-4. **Check Dutch support** - Many US services lack good Dutch
-5. **Review rate limits** - Free tiers often throttle heavily
-6. **Calculate true cost** - Include overage charges
+- [ ] API keys configured in `.env`
+- [ ] FFmpeg installed (`ffmpeg -version` works)
+- [ ] API running (`http://localhost:8000/health` returns OK)
+- [ ] Database created (auto-creates on first run)
+
+### What Happens When You Generate
+
+1. **Script Generation** (30 sec)
+   - Claude writes hook, 3-5 scenes, CTA
+   - Creates image prompts for each scene
+
+2. **Image Generation** (2-3 min)
+   - Replicate generates 5-7 images in parallel
+   - Downloads to temp folder
+
+3. **Voice Generation** (30 sec)
+   - ElevenLabs converts script to audio
+   - Downloads MP3 file
+
+4. **Assembly** (1-2 min)
+   - FFmpeg combines everything
+   - Adds Ken Burns effect
+   - Outputs final MP4
+
+**Total: ~5-8 minutes per video**
 
 ---
 
-## Questions?
+## Cost Calculator
 
-Check the main documentation at `/docs/` or ask in Slack.
+### Per Video (Current Setup)
+
+| Step | Service | Cost |
+|------|---------|------|
+| Script | Claude Sonnet | €0.01 |
+| Image prompts | Claude Sonnet | €0.01 |
+| Images (6x) | Replicate Flux | €0.02 |
+| Voiceover | ElevenLabs | €0.12 |
+| Assembly | FFmpeg | Free |
+| **Total** | | **€0.16** |
+
+### Per Video (Budget Setup)
+
+| Step | Service | Cost |
+|------|---------|------|
+| Script | Gemini 1.5 Pro | €0.003 |
+| Image prompts | Gemini Flash | €0.001 |
+| Images (6x) | fal.ai Flux | €0.012 |
+| Voiceover | Amazon Polly | €0.01 |
+| Assembly | FFmpeg | Free |
+| **Total** | | **€0.026** |
+
+### Monthly Projections
+
+| Videos/Month | Current | Budget |
+|--------------|---------|--------|
+| 10 (testing) | €1.60 | €0.26 |
+| 50 | €8 | €1.30 |
+| 160 (8 clients) | €26 | €4.20 |
+| 500 | €80 | €13 |
+
+---
+
+## Quick Reference Card
+
+### API Keys Needed
+
+```
+ANTHROPIC_API_KEY    → console.anthropic.com
+REPLICATE_API_TOKEN  → replicate.com
+ELEVENLABS_API_KEY   → elevenlabs.io
+```
+
+### Model Tiers (Simple)
+
+```
+EXPENSIVE & SMART    Opus / GPT-4 / Gemini Ultra
+BALANCED (use this)  Sonnet / GPT-4o / Gemini Pro  ←
+CHEAP & FAST         Haiku / GPT-4o-mini / Flash
+```
+
+### Service Priority
+
+```
+NOW     → Claude, Replicate, ElevenLabs, FFmpeg
+SOON    → Google Drive, Tally, Resend
+LATER   → DigitalOcean, n8n, HeyGen
+FUTURE  → Stripe
+```
+
+---
+
+## Getting Help
+
+- **Anthropic docs:** [docs.anthropic.com](https://docs.anthropic.com)
+- **Replicate docs:** [replicate.com/docs](https://replicate.com/docs)
+- **ElevenLabs docs:** [elevenlabs.io/docs](https://elevenlabs.io/docs)
+- **n8n docs:** [docs.n8n.io](https://docs.n8n.io)
+- **FFmpeg wiki:** [trac.ffmpeg.org](https://trac.ffmpeg.org)
+
+---
+
+## Summary
+
+**To test video generation today:**
+1. Get 3 API keys (Claude, Replicate, ElevenLabs) - 15 min
+2. Install FFmpeg - 2 min
+3. Add keys to `.env` - 2 min
+4. Run the API locally - 1 min
+5. Generate a test video - 5 min
+
+**Total investment:** ~€15 and 25 minutes
+
+**To go live with clients:** Add Google Drive, Tally forms, hosting, and email. That's Phase 2.
+
+Start simple. Test first. Scale when ready.
