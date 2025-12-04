@@ -1,0 +1,123 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Michroma&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bom-black: #0C0C0C;
+  --warm-white: #FAF9F7;
+  --paper-white: #FFFFFF;
+  --slate-grey: #2E2E2E;
+  --steel-grey: #5A5A5A;
+  --silver-mist: #E8E6E3;
+  --stone-blue: #6B8EA3;
+  --sage: #9BA88A;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--warm-white);
+  color: var(--bom-black);
+  line-height: 1.5;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Michroma', sans-serif;
+}
+
+/* Custom checkbox styling */
+.task-checkbox {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--slate-grey);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.task-checkbox:checked {
+  background-color: var(--sage);
+  border-color: var(--sage);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.task-checkbox:hover {
+  border-color: var(--stone-blue);
+}
+
+/* Task label styling when checked */
+.task-label.completed {
+  text-decoration: line-through;
+  color: var(--steel-grey);
+}
+
+/* YouTube embed container */
+.video-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--stone-blue);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.video-link:hover {
+  color: var(--bom-black);
+  text-decoration: underline;
+}
+
+/* Notes textarea */
+.notes-textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 12px;
+  border: 2px solid var(--silver-mist);
+  border-radius: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  resize: vertical;
+  transition: border-color 0.2s ease;
+}
+
+.notes-textarea:focus {
+  outline: none;
+  border-color: var(--stone-blue);
+}
+
+/* Section card styling */
+.section-card {
+  background: var(--paper-white);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+/* Progress bar */
+.progress-bar {
+  height: 8px;
+  background: var(--silver-mist);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--stone-blue), var(--sage));
+  transition: width 0.3s ease;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Section anchor offset for fixed header */
+section[id] {
+  scroll-margin-top: 100px;
+}
