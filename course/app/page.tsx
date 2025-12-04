@@ -76,7 +76,7 @@ const sections: Section[] = [
     icon: <Wrench className="w-6 h-6" />,
     subsections: [
       {
-        title: "A. Scriptwriting (LLM)",
+        title: "A. Prompt Engineering & Scriptwriting",
         tasks: [
           {
             id: "ct_a1",
@@ -85,14 +85,59 @@ const sections: Section[] = [
           },
           {
             id: "ct_a2",
-            label: "Watch Prompt Engineering Tutorial (freeCodeCamp)",
-            url: "https://www.youtube.com/watch?v=_ZvnD96BnSQ",
+            label: "Watch Complete Prompt Engineering Tutorial",
+            url: "https://www.youtube.com/watch?v=nDRcJSXBLfk",
           },
-          { id: "ct_a3", label: "Practice: write a 15s script" },
-          { id: "ct_a4", label: "Practice: write a 30s script" },
-          { id: "ct_a5", label: "Practice: rewrite script in Dutch" },
+          {
+            id: "ct_a3",
+            label: "Watch Advanced Prompting Techniques",
+            url: "https://www.youtube.com/watch?v=FVJE1QRkl5A",
+          },
+          {
+            id: "ct_a4",
+            label: "Watch Prompt Engineering for Beginners",
+            url: "https://www.youtube.com/watch?v=qBlX6FhDm2E",
+          },
+          {
+            id: "ct_a5",
+            label: "Watch Practical Prompt Examples",
+            url: "https://www.youtube.com/watch?v=pwWBcsxEoLk",
+          },
           {
             id: "ct_a6",
+            label: "Course: Prompt Engineering for ChatGPT (Coursera)",
+            url: "https://imp.i384100.net/Z69rnk",
+          },
+          {
+            id: "ct_a7",
+            label: "Course: Google Prompting Essentials",
+            url: "https://imp.i384100.net/WymYBX",
+          },
+          {
+            id: "ct_a8",
+            label: "Read: Anthropic Prompting Docs",
+            url: "https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview",
+          },
+          {
+            id: "ct_a9",
+            label: "Read: Google Prompting Docs",
+            url: "https://ai.google.dev/gemini-api/docs/prompting-intro",
+          },
+          {
+            id: "ct_a10",
+            label: "Read: OpenAI Prompting Guide",
+            url: "https://platform.openai.com/docs/guides/prompt-engineering",
+          },
+          {
+            id: "ct_a11",
+            label: "Tool: Fabric Prompt Improver (GitHub)",
+            url: "https://github.com/danielmiessler/fabric",
+          },
+          { id: "ct_a12", label: "Practice: write a 15s video script" },
+          { id: "ct_a13", label: "Practice: write a 30s video script" },
+          { id: "ct_a14", label: "Practice: rewrite script in Dutch" },
+          {
+            id: "ct_a15",
             label: "Practice: adjust tone (e.g. energetic, warm, corporate)",
           },
         ],
@@ -142,6 +187,33 @@ const sections: Section[] = [
           { id: "ct_c5", label: "Experiment: adjust speed, pitch, style" },
         ],
         notesKey: "notes_voice_gen",
+      },
+      {
+        title: "D. Video Generation (Multimodal AI)",
+        tasks: [
+          {
+            id: "ct_d1",
+            label: "Watch AI Video Generation Overview",
+            url: "https://www.youtube.com/watch?v=nDRcJSXBLfk",
+          },
+          {
+            id: "ct_d2",
+            label: "Watch Multimodal AI Explained",
+            url: "https://www.youtube.com/watch?v=zzBmvzR-URg",
+          },
+          {
+            id: "ct_d3",
+            label: "Watch AI Video Tools Comparison",
+            url: "https://www.youtube.com/watch?v=JzcxF137zts",
+          },
+          {
+            id: "ct_d4",
+            label: "Watch Practical Video Generation Tutorial",
+            url: "https://www.youtube.com/watch?v=Qa1j09jHMs8",
+          },
+          { id: "ct_d5", label: "Explore video generation capabilities in BOM Studios" },
+        ],
+        notesKey: "notes_video_gen",
       },
     ],
   },
