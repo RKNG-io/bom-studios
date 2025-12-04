@@ -109,4 +109,4 @@ website/
 
 1. Check Next.js App Router docs
 2. Check Tailwind docs
-3. Check `/docs/design-system.md` for visual specs
+3. Check `/docs/bom-studios-design-system.md` for visual specs

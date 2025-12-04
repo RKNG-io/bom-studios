@@ -1100,15 +1100,15 @@ cd website && vercel
 
 1. Check Next.js App Router docs: https://nextjs.org/docs/app
 2. Check Tailwind docs: https://tailwindcss.com/docs
-3. Check `/docs/design-system.md` for visual specs
-4. Check `/docs/brand-kit.md` for tone/voice
-5. Check `/docs/website-copy.md` for exact copy
+3. Check `/docs/bom-studios-design-system.md` for visual specs
+4. Check `/docs/bom-studios-brand-kit.md` for tone/voice
+5. Check `/docs/bom-studios-website-copy-improved.md` for exact copy
 
 ---
 
 ## Copy Reference
 
-All website copy is defined in `/docs/website-copy-improved.md`. Use exact wording — don't improvise headlines or CTAs.
+All website copy is defined in `/docs/bom-studios-website-copy-improved.md`. Use exact wording — don't improvise headlines or CTAs.
 
 Key copy:
 - **Hero headline:** "Social media that actually gets done."

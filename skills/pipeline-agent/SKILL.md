@@ -583,7 +583,7 @@ def test_script_generation():
 
 ## When Stuck
 
-1. Check `/docs/auto-pipeline.md` for full pipeline spec
+1. Check `/docs/bom-studios-auto-pipeline.md` for full pipeline spec
 2. Check n8n docs: https://docs.n8n.io/
 3. Test prompts in isolation before integrating
 4. If provider API changes, check their docs directly

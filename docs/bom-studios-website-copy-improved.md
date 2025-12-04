@@ -129,7 +129,7 @@ Based in Amsterdam. Working with businesses across the Netherlands and beyond.
 
 *(Input field placeholder: yourwebsite.nl or @yourbusiness)*
 
-Or: [Book a 10-minute intro call](link) if you'd rather talk first.
+Or: Book a 10-minute intro call if you'd rather talk first.
 
 ---
 

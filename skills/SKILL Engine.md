@@ -345,6 +345,6 @@ python -c "from providers.replicate import ReplicateProvider; ..."
 ## When Stuck
 
 1. Check Flet docs: https://flet.dev/docs/
-2. Check `/docs/engine-spec.md` for feature requirements
-3. Check `/docs/design-system.md` for visual specs
+2. Check `/docs/bom-studios-engine-spec.md` for feature requirements
+3. Check `/docs/bom-studios-design-system.md` for visual specs
 4. If provider API unclear, stub the response and continue

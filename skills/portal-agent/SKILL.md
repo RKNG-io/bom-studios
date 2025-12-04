@@ -599,6 +599,6 @@ cd portal && npm run build
 ## When Stuck
 
 1. Check Next.js App Router docs: https://nextjs.org/docs/app
-2. Check `/docs/design-system.md` for visual specs
-3. Check `/docs/website-copy.md` for tone/copy guidance
+2. Check `/docs/bom-studios-design-system.md` for visual specs
+3. Check `/docs/bom-studios-website-copy-improved.md` for tone/copy guidance
 4. If API endpoint missing, mock the response and continue

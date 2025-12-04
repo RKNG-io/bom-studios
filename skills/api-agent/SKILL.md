@@ -485,6 +485,6 @@ cd api && pytest
 ## When Stuck
 
 1. Check FastAPI docs: https://fastapi.tiangolo.com/
-2. Check `/docs/engine-spec.md` for data models
-3. Check `/docs/auto-pipeline.md` for pipeline logic
+2. Check `/docs/bom-studios-engine-spec.md` for data models
+3. Check `/docs/bom-studios-auto-pipeline.md` for pipeline logic
 4. If external API unclear, stub the response

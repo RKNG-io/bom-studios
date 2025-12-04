@@ -86,24 +86,25 @@ bom-studios/
 │       ├── api.ts           # API client
 │       └── auth.ts          # Auth helpers
 │
-├── automations/
-│   ├── prompts/             # LLM prompt templates
-│   │   ├── script_generator.txt
-│   │   └── image_prompts.txt
-│   └── n8n/                 # n8n workflow exports
+├── skills/                   # Agent skill definitions
+│   ├── SKILL.md             # Engine agent
+│   ├── api-agent/SKILL.md   # API agent
+│   ├── portal-agent/SKILL.md # Portal agent
+│   ├── pipeline-agent/SKILL.md # Pipeline agent
+│   └── website-agent/SKILL.md # Website agent
 │
-├── data/
-│   └── bom.db               # SQLite database
-│
-├── scripts/
-│   ├── setup.sh             # Dev environment setup
-│   └── seed.py              # Seed test data
+├── website/                  # Public marketing site (Next.js)
+│   ├── app/                 # Pages and routes
+│   └── components/          # UI components
 │
 └── docs/
-    ├── brand-kit.md
-    ├── design-system.md
-    ├── engine-spec.md
-    └── auto-pipeline.md
+    ├── bom-studios-brand-kit.md
+    ├── bom-studios-design-system.md
+    ├── bom-studios-engine-spec.md
+    ├── bom-studios-auto-pipeline.md
+    ├── bom-studios-website-copy-improved.md
+    ├── video-api-user-guide.md
+    └── GOOGLE-DRIVE-SETUP.md
 ```
 
 ---
@@ -301,9 +302,10 @@ POST   /api/webhooks/stripe     # Payment webhook
 ## Agent Coordination
 
 This project uses multiple skill agents. See `/skills/` for:
-- `engine-agent/` — Flet UI and internal logic
+- `SKILL.md` — Flet engine (internal production tool)
 - `api-agent/` — FastAPI backend
-- `portal-agent/` — Next.js frontend
+- `portal-agent/` — Next.js client portal
 - `pipeline-agent/` — Video automation pipeline
+- `website-agent/` — Public marketing website
 
 Each agent has its own SKILL.md with focused instructions.
