@@ -741,6 +741,17 @@ export default function CoursePage() {
   );
 }
 
+function getYouTubeVideoId(url: string): string | null {
+  const patterns = [
+    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\s?]+)/,
+  ];
+  for (const pattern of patterns) {
+    const match = url.match(pattern);
+    if (match) return match[1];
+  }
+  return null;
+}
+
 function TaskItem({
   task,
   completed,
@@ -750,39 +761,75 @@ function TaskItem({
   completed: boolean;
   onToggle: () => void;
 }) {
+  const [showVideo, setShowVideo] = useState(false);
+  const videoId = task.url ? getYouTubeVideoId(task.url) : null;
+  const isYouTube = videoId !== null;
+
   return (
-    <div className="flex items-start gap-3">
-      <input
-        type="checkbox"
-        className="task-checkbox mt-0.5"
-        checked={completed || false}
-        onChange={onToggle}
-      />
-      <label
-        className={`flex-1 cursor-pointer ${
-          completed ? "task-label completed" : "text-slate-grey"
-        }`}
-        onClick={onToggle}
-      >
-        {task.url ? (
-          <span className="flex items-center gap-2 flex-wrap">
+    <div className="space-y-2">
+      <div className="flex items-start gap-3">
+        <input
+          type="checkbox"
+          className="task-checkbox mt-0.5"
+          checked={completed || false}
+          onChange={onToggle}
+        />
+        <div className="flex-1">
+          <label
+            className={`cursor-pointer ${
+              completed ? "task-label completed" : "text-slate-grey"
+            }`}
+            onClick={onToggle}
+          >
             <span>{task.label}</span>
-            <a
-              href={task.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="video-link text-sm"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <Play className="w-4 h-4" />
-              <span>Watch</span>
-              <ExternalLink className="w-3 h-3" />
-            </a>
-          </span>
-        ) : (
-          task.label
-        )}
-      </label>
+          </label>
+          {task.url && (
+            <div className="mt-1 flex items-center gap-2">
+              {isYouTube ? (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowVideo(!showVideo);
+                  }}
+                  className="video-link text-sm"
+                >
+                  <Play className="w-4 h-4" />
+                  <span>{showVideo ? "Hide" : "Watch"}</span>
+                  {showVideo ? (
+                    <ChevronUp className="w-3 h-3" />
+                  ) : (
+                    <ChevronDown className="w-3 h-3" />
+                  )}
+                </button>
+              ) : (
+                <a
+                  href={task.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="video-link text-sm"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <ExternalLink className="w-4 h-4" />
+                  <span>Open</span>
+                </a>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+      {showVideo && videoId && (
+        <div className="ml-8 mt-2">
+          <div className="relative w-full aspect-video max-w-2xl rounded-lg overflow-hidden shadow-lg">
+            <iframe
+              src={`https://www.youtube.com/embed/${videoId}`}
+              title={task.label}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              className="absolute inset-0 w-full h-full"
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
