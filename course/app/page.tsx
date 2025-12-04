@@ -46,28 +46,26 @@ const sections: Section[] = [
     tasks: [
       {
         id: "f1",
-        label: "Watch What are Large Language Models?",
-        url: "https://www.youtube.com/watch?v=vw6E7gK4Dtk",
+        label: "Watch Large Language Models explained briefly (3Blue1Brown)",
+        url: "https://www.youtube.com/watch?v=LPZh9BOjkQs",
       },
       {
         id: "f2",
-        label: "Watch AI Models Explained Simply",
-        url: "https://www.youtube.com/watch?v=xx310zM3tLs",
+        label: "Watch Intro to Large Language Models (Andrej Karpathy)",
+        url: "https://www.youtube.com/watch?v=zjkBMFhNj_g",
       },
       {
         id: "f3",
-        label: "Watch Tokens Explained",
-        url: "https://www.youtube.com/watch?v=zizonToFXDs",
+        label: "Watch How Diffusion Models Work (AI Coffee Break)",
+        url: "https://www.youtube.com/watch?v=344w5h24-h8",
       },
       {
         id: "f4",
-        label: "Watch How AI text to image to voice to video works",
-        url: "https://www.youtube.com/watch?v=KbcZ2WckxEs",
+        label: "Read: How AI text to image to voice to video works",
       },
       {
         id: "f5",
-        label: "Watch AI video content explained (short)",
-        url: "https://www.youtube.com/watch?v=MsGg4WXPynk",
+        label: "Understand the BOM Studios pipeline: Script → Images → Voice → Video",
       },
     ],
     notesKey: "notes_foundations",
@@ -82,13 +80,13 @@ const sections: Section[] = [
         tasks: [
           {
             id: "ct_a1",
-            label: "Watch How to use Anthropic Claude",
-            url: "https://www.youtube.com/watch?v=ZS8KJqLa5PE",
+            label: "Visit claude.ai and create an account",
+            url: "https://claude.ai",
           },
           {
             id: "ct_a2",
-            label: "Watch Prompting Basics (Beginner-Friendly)",
-            url: "https://www.youtube.com/watch?v=-1h5Nw2Z2jE",
+            label: "Watch Prompt Engineering Tutorial (freeCodeCamp)",
+            url: "https://www.youtube.com/watch?v=_ZvnD96BnSQ",
           },
           { id: "ct_a3", label: "Practice: write a 15s script" },
           { id: "ct_a4", label: "Practice: write a 30s script" },
@@ -105,13 +103,13 @@ const sections: Section[] = [
         tasks: [
           {
             id: "ct_b1",
-            label: "Watch What is diffusion / image generation?",
-            url: "https://www.youtube.com/watch?v=0pDE4VX_9Kk",
+            label: "Watch Stable Diffusion Explained (Computerphile)",
+            url: "https://www.youtube.com/watch?v=1CIpzeNxIhU",
           },
           {
             id: "ct_b2",
-            label: "Watch Replicate Tutorial: How to run models",
-            url: "https://www.youtube.com/watch?v=mcSCTWJFe8E",
+            label: "Visit Replicate and explore Flux models",
+            url: "https://replicate.com/collections/text-to-image",
           },
           { id: "ct_b3", label: "Practice: generate 5 images using Flux Schnell" },
           {
@@ -131,16 +129,16 @@ const sections: Section[] = [
         tasks: [
           {
             id: "ct_c1",
-            label: "Watch ElevenLabs Beginner Tutorial",
-            url: "https://www.youtube.com/watch?v=rxF3zGF7s84",
+            label: "Watch How to Use ElevenLabs (Yes To Tech)",
+            url: "https://www.youtube.com/watch?v=2RDtt-yd-sA",
           },
           {
             id: "ct_c2",
-            label: "Watch How voice cloning & TTS works",
-            url: "https://www.youtube.com/watch?v=E0uS1MQoQv0",
+            label: "Visit ElevenLabs and explore the interface",
+            url: "https://elevenlabs.io",
           },
-          { id: "ct_c3", label: "Practice: use Dutch male voice (Adam)" },
-          { id: "ct_c4", label: "Practice: use Dutch female voice (Rachel)" },
+          { id: "ct_c3", label: "Practice: use Dutch male voice" },
+          { id: "ct_c4", label: "Practice: use Dutch female voice" },
           { id: "ct_c5", label: "Experiment: adjust speed, pitch, style" },
         ],
         notesKey: "notes_voice_gen",
@@ -154,47 +152,42 @@ const sections: Section[] = [
     tasks: [
       {
         id: "gh1",
-        label: "Watch What is Git & GitHub? (Beginner)",
-        url: "https://www.youtube.com/watch?v=8Dd7KRpKeaE",
-      },
-      {
-        id: "gh2",
-        label: "Watch Git Explained in 100 Seconds",
+        label: "Watch Git Explained in 100 Seconds (Fireship)",
         url: "https://www.youtube.com/watch?v=hwP7WQkmECE",
       },
       {
+        id: "gh2",
+        label: "Watch Git and GitHub for Beginners Crash Course (freeCodeCamp)",
+        url: "https://www.youtube.com/watch?v=RGOj5yH7evk",
+      },
+      {
         id: "gh3",
-        label: "Watch How to Navigate GitHub Repositories",
-        url: "https://www.youtube.com/watch?v=iv8rSLsi1xo",
+        label: "Watch GitHub Pull Request in 100 Seconds (Fireship)",
+        url: "https://www.youtube.com/watch?v=8lGpZkjnkt4",
       },
       {
         id: "gh4",
-        label: "Watch Understanding Branches & Commits",
-        url: "https://www.youtube.com/watch?v=oPpnCh7InLY",
+        label: "Create a GitHub account if you don't have one",
+        url: "https://github.com",
       },
       {
         id: "gh5",
-        label: "Watch GitHub Pull Requests Explained",
-        url: "https://www.youtube.com/watch?v=For9VtrQx58",
-      },
-      {
-        id: "gh6",
         label: "Practice: Navigate to the BOM Studios repository",
       },
       {
-        id: "gh7",
+        id: "gh6",
         label: "Practice: Find and read the README file",
       },
       {
-        id: "gh8",
+        id: "gh7",
         label: "Practice: Browse the code structure (engine/, api/, portal/)",
       },
       {
-        id: "gh9",
+        id: "gh8",
         label: "Practice: View recent commits and understand what changed",
       },
       {
-        id: "gh10",
+        id: "gh9",
         label: "Practice: Find the .env.example file to understand configuration",
       },
     ],
@@ -207,33 +200,32 @@ const sections: Section[] = [
     tasks: [
       {
         id: "ls1",
-        label: "Watch FFmpeg Crash Course (Beginner)",
-        url: "https://www.youtube.com/watch?v=26d9SxE7iPo",
+        label: "Watch What is an API? (MuleSoft)",
+        url: "https://www.youtube.com/watch?v=s7wmiS2mSXY",
       },
       {
         id: "ls2",
-        label: "Watch Ken Burns effect explanation",
-        url: "https://www.youtube.com/watch?v=rdwz7QiVQK0",
+        label: "Watch Python FastAPI Tutorial (Tech With Tim)",
+        url: "https://www.youtube.com/watch?v=tLKKmouUams",
       },
       {
         id: "ls3",
-        label: "Watch What is an API (Beginner Explanation)",
-        url: "https://www.youtube.com/watch?v=GZvSYJDk-us",
+        label: "Watch FFmpeg in 100 Seconds (Fireship)",
+        url: "https://www.youtube.com/watch?v=26Mayv5JPz0",
       },
       {
         id: "ls4",
-        label: "Watch How backends and frontends talk",
-        url: "https://www.youtube.com/watch?v=7YcW25PHnAA",
+        label: "Install Python 3.11+ on your machine",
+        url: "https://www.python.org/downloads/",
       },
       {
         id: "ls5",
-        label: "Watch How to install Python",
-        url: "https://www.youtube.com/watch?v=Kn1HF3oD19c",
+        label: "Install FFmpeg",
+        url: "https://ffmpeg.org/download.html",
       },
       {
         id: "ls6",
-        label: "Watch How to run FastAPI locally (beginner tutorial)",
-        url: "https://www.youtube.com/watch?v=0RS-M7t_TTg",
+        label: "Clone the BOM Studios repository",
       },
       {
         id: "ls7",
@@ -256,8 +248,7 @@ const sections: Section[] = [
     tasks: [
       {
         id: "fv1",
-        label: "Watch End-to-end AI video workflow overview",
-        url: "https://www.youtube.com/watch?v=6gG8LqyEZZ8",
+        label: "Review the BOM Studios docs/auto-pipeline.md",
       },
       {
         id: "fv2",
@@ -287,14 +278,13 @@ const sections: Section[] = [
     tasks: [
       {
         id: "op1",
-        label: "Watch Google Drive Sharing Basics",
-        url: "https://www.youtube.com/watch?v=Tpe7RMm7R0U",
+        label: "Watch How to Share Files in Google Drive",
+        url: "https://www.youtube.com/watch?v=y7Y7YvKZhIo",
       },
       { id: "op2", label: "Upload a generated video to Drive, share link" },
       {
         id: "op3",
-        label: "Watch How to evaluate short-form videos",
-        url: "https://www.youtube.com/watch?v=zKJc2pQmT9A",
+        label: "Learn to evaluate short-form videos: hook, visuals, voice, CTA",
       },
       {
         id: "op4",
@@ -302,8 +292,8 @@ const sections: Section[] = [
       },
       {
         id: "op5",
-        label: "(Optional) Watch CapCut Beginner Tutorial for small edits",
-        url: "https://www.youtube.com/watch?v=sRlE6O1Sm6A",
+        label: "(Optional) Watch CapCut Beginner Tutorial",
+        url: "https://www.youtube.com/watch?v=NQO9LY1GpXc",
       },
     ],
     notesKey: "notes_operations",
@@ -315,8 +305,8 @@ const sections: Section[] = [
     tasks: [
       {
         id: "au1",
-        label: "Watch Tally Forms Beginner Guide",
-        url: "https://www.youtube.com/watch?v=aDAFzR2yVQI",
+        label: "Visit Tally and explore form creation",
+        url: "https://tally.so",
       },
       {
         id: "au2",
@@ -324,8 +314,8 @@ const sections: Section[] = [
       },
       {
         id: "au3",
-        label: "Watch n8n for Beginners",
-        url: "https://www.youtube.com/watch?v=jOqJ0NVsB7Q",
+        label: "Watch n8n Beginner Tutorial",
+        url: "https://www.youtube.com/watch?v=1MwSoB0gnM4",
       },
       {
         id: "au4",
@@ -334,13 +324,8 @@ const sections: Section[] = [
       },
       {
         id: "au5",
-        label: "(Optional) Watch How Vercel Works (for beginners)",
-        url: "https://www.youtube.com/watch?v=ZV6v2ZlMTaE",
-      },
-      {
-        id: "au6",
-        label: "(Optional) Watch DigitalOcean App Platform Tutorial",
-        url: "https://www.youtube.com/watch?v=2QA2Jm2X0iM",
+        label: "(Optional) Watch How to Deploy to Vercel",
+        url: "https://www.youtube.com/watch?v=JQxMpRELuPM",
       },
     ],
     notesKey: "notes_automation",
@@ -352,13 +337,11 @@ const sections: Section[] = [
     tasks: [
       {
         id: "bs1",
-        label: "Watch How to explain AI video simply",
-        url: "https://www.youtube.com/watch?v=8s0CM-y48lI",
+        label: "Learn to explain AI video production simply to clients",
       },
       {
         id: "bs2",
-        label: "Watch How short-form video drives sales",
-        url: "https://www.youtube.com/watch?v=XzGZt2v5BRU",
+        label: "Understand how short-form video drives engagement",
       },
       {
         id: "bs3",
@@ -758,6 +741,17 @@ export default function CoursePage() {
   );
 }
 
+function getYouTubeVideoId(url: string): string | null {
+  const patterns = [
+    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\s?]+)/,
+  ];
+  for (const pattern of patterns) {
+    const match = url.match(pattern);
+    if (match) return match[1];
+  }
+  return null;
+}
+
 function TaskItem({
   task,
   completed,
@@ -767,39 +761,75 @@ function TaskItem({
   completed: boolean;
   onToggle: () => void;
 }) {
+  const [showVideo, setShowVideo] = useState(false);
+  const videoId = task.url ? getYouTubeVideoId(task.url) : null;
+  const isYouTube = videoId !== null;
+
   return (
-    <div className="flex items-start gap-3">
-      <input
-        type="checkbox"
-        className="task-checkbox mt-0.5"
-        checked={completed || false}
-        onChange={onToggle}
-      />
-      <label
-        className={`flex-1 cursor-pointer ${
-          completed ? "task-label completed" : "text-slate-grey"
-        }`}
-        onClick={onToggle}
-      >
-        {task.url ? (
-          <span className="flex items-center gap-2 flex-wrap">
+    <div className="space-y-2">
+      <div className="flex items-start gap-3">
+        <input
+          type="checkbox"
+          className="task-checkbox mt-0.5"
+          checked={completed || false}
+          onChange={onToggle}
+        />
+        <div className="flex-1">
+          <label
+            className={`cursor-pointer ${
+              completed ? "task-label completed" : "text-slate-grey"
+            }`}
+            onClick={onToggle}
+          >
             <span>{task.label}</span>
-            <a
-              href={task.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="video-link text-sm"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <Play className="w-4 h-4" />
-              <span>Watch</span>
-              <ExternalLink className="w-3 h-3" />
-            </a>
-          </span>
-        ) : (
-          task.label
-        )}
-      </label>
+          </label>
+          {task.url && (
+            <div className="mt-1 flex items-center gap-2">
+              {isYouTube ? (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowVideo(!showVideo);
+                  }}
+                  className="video-link text-sm"
+                >
+                  <Play className="w-4 h-4" />
+                  <span>{showVideo ? "Hide" : "Watch"}</span>
+                  {showVideo ? (
+                    <ChevronUp className="w-3 h-3" />
+                  ) : (
+                    <ChevronDown className="w-3 h-3" />
+                  )}
+                </button>
+              ) : (
+                <a
+                  href={task.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="video-link text-sm"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <ExternalLink className="w-4 h-4" />
+                  <span>Open</span>
+                </a>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+      {showVideo && videoId && (
+        <div className="ml-8 mt-2">
+          <div className="relative w-full aspect-video max-w-2xl rounded-lg overflow-hidden shadow-lg">
+            <iframe
+              src={`https://www.youtube.com/embed/${videoId}`}
+              title={task.label}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              className="absolute inset-0 w-full h-full"
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
